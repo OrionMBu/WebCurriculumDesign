@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping("/remote")
     public String remote() {
+        for (int i = 1; i <= 10; i++) {
+            System.out.println("Yes!");
+        }
         return "Success!";
     }
 }
