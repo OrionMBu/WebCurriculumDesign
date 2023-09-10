@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <base target="_blank" />
+  <style>
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <style id="cloudAttachStyle">
+    {display:none;}
+  </style>
+  <style id="blockquoteStyle">blockquote{display:none;}</style>
+  <title>验证码页面</title>
+</head>
+    <style media="screen">
+      body { padding:0 !important; margin:0 auto !important; display:block !important; min-width:100% !important; width:100% !important; background:#ffffff; -webkit-text-size-adjust:none }
+      a { color:#7abefa; text-decoration:underline }
+      body a { color:#ffffff; text-decoration:underline }
+      img { margin: 0 !important; -ms-interpolation-mode: bicubic;  }
+
+
+      table { mso-table-lspace:0; mso-table-rspace:0; }
+      img, a img{ border:0; outline:none; text-decoration:none; }
+      #outlook a { padding:0; }
+      div,p,a,li,td,blockquote { mso-line-height-rule:exactly; }
+      a[href^=tel],a[href^=sms] { color:inherit; text-decoration:none; }
+
+
+      a[x-apple-data-detectors] { color: inherit !important; text-decoration: inherit !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+
+      .btn-18 a { display: block; padding: 13px 35px; text-decoration: none; }
+
+      .l-white a { color: #ffffff; }
+      .l-black a { color: #000001; }
+      .l-grey1 a { color: #dbdee2; }
+      .l-grey2 a { color: #a1a2a4; }
+      .l-grey3 a { color: #dadcdd; }
+      .l-grey4 a { color: #f1f1f1; }
+      .l-grey5 a { color: #dddedf; }
+      .l-grey6 a { color: #bfbfbf; }
+      .l-grey7 a { color: #dcdddd; }
+      .l-grey8 a { color: #8e96a4; }
+      .l-green a { color: #a4d007; }
+      .l-blue a { color: #6a7c96; }
+      .l-blue1 a { color: #7abefa; }
+      .l-blue2 a { color: #9eb8cc; }
+
+
+
+      @media only screen and (max-device-width: 480px), only screen and (max-width: 480px) {
+        .mpy-35 { padding-top: 35px !important; padding-bottom: 35px !important; }
+
+        .mpx-15 { padding-left: 15px !important; padding-right: 15px !important; }
+
+        .mpb-50 { padding-bottom: 50px !important; }
+
+        .td,
+        .m-shell { width: 100% !important; min-width: 100% !important; }
+
+        .fluid-img img { width: 100% !important; max-width: 100% !important; height: auto !important; }
+
+      }
+    </style>
+
+
+
+    <div class="body" style="padding:0 !important; margin:0 auto !important; display:block !important; min-width:100% !important; width:100% !important; background:#ffffff; -webkit-text-size-adjust:none;">
+      <div style="text-align: center;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 0; padding: 0; width: 100%; height: 100%;" bgcolor="#ffffff" class="gwfw">
+          <tr>
+            <td style="margin: 0; padding: 0; width: 100%; height: 100%;" align="center" valign="top">
+              <table width="775" border="0" cellspacing="0" cellpadding="0" class="m-shell">
+                <tr>
+                  <td class="td" style="width:775px; min-width:775px; font-size:0; line-height:0; padding:0; margin:0; font-weight:normal;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+                      <tr>
+                        <td class="p-80 mpy-35 mpx-15" bgcolor="#212429" style="padding: 80px;">
+                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+
+                            <tr>
+                              <td class="img pb-45" style="font-size:0; line-height:0; text-align:left; padding-bottom: 45px;">
+                                  <img src="https://eternalavalon.top/images/Profile.png" width="88" height="88" border="0" alt="Steam">
+                              </td>
+                            </tr>
+
+
+
+                            <tr>
+                              <td>
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td class="title-36 pb-30 c-grey6 fw-b" style="font-size:36px; line-height:42px; font-family:Arial, sans-serif, 'Motiva Sans'; text-align:left; padding-bottom: 30px; color:#bfbfbf; font-weight:bold;"><span th:text="${user_mail}"></span>，您好！</td>
+                                  </tr>
+                                </table>
+
+
+
+
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td class="title-28 c-white pb-30" style="font-size:28px; line-height:36px; font-family:Arial, sans-serif, 'Motiva Sans'; text-align:left; color:#ffffff; padding-bottom: 30px;">
+                                      <strong><span th:text="${prompt_message_for_code}"></span></strong>
+                                    </td>
+                                  </tr>
+                                </table>
+
+
+
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td class="pb-70 mpb-50" style="padding-bottom: 70px;">
+                                      <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#17191c">
+                                        <tr>
+                                          <td class="py-30 px-56" style="padding-top: 30px; padding-bottom: 30px; padding-left: 56px; padding-right: 56px;">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td class="title-48 c-blue1 fw-b a-center" style="font-size:48px; line-height:52px; font-family:Arial, sans-serif, 'Motiva Sans'; color:#3a9aed; font-weight:bold; text-align:center;"><span th:text="${mail_verification_code}"></span></td>
+                                              </tr>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </table>
+
+
+
+
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td class="text-18 c-grey4 pb-30" style="font-size:18px; line-height:25px; font-family:Arial, sans-serif, 'Motiva Sans'; text-align:left; color:#dbdbdb; padding-bottom: 30px;"><span th:text="${prompt_message_for_hint}"></span></td>
+                                  </tr>
+                                </table>
+
+
+
+
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td class="pt-30" style="padding-top: 30px;">
+                                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                          <td class="img" width="3" bgcolor="#3a9aed" style="font-size:0; line-height:0; text-align:left;"></td>
+                                          <td class="img" width="37" style="font-size:0; line-height:0; text-align:left;"></td>
+                                          <td>
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td class="text-16 py-20 c-grey4 fallback-font" style="font-size:16px; line-height:22px; font-family:Arial, sans-serif, 'Motiva Sans'; text-align:left; padding-top: 20px; padding-bottom: 20px; color:#f1f1f1;">
+                                                  祝您愉快，<br>
+                                                  Web团队</td>
+                                              </tr>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </table>
+
+
+                              </td>
+                            </tr>
+
+                          </table>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+</div>

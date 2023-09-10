@@ -1,0 +1,73 @@
+package webcurriculumdesign.backend.interceptor;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+import webcurriculumdesign.backend.annotation.RequiredLogin;
+import webcurriculumdesign.backend.data.Constant;
+import webcurriculumdesign.backend.data.pojo.CurrentUser;
+import webcurriculumdesign.backend.util.JWTUtil;
+
+import javax.naming.AuthenticationException;
+import java.lang.reflect.Method;
+import java.util.Objects;
+
+/**
+ * 拦截器，判断用户权限，返回值为true则放行，false则中止
+ */
+public class Interceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //判断调用的是不是一个接口方法 TODO
+        if(!(handler instanceof HandlerMethod)){
+            return true;
+        }
+
+        //获取请求头(Header)里"accessToken"内数据
+        String accessToken = request.getHeader("accessToken");
+
+        response.setContentType("application/json;charset=UTF-8");
+
+        //java反射
+        Method method = ((HandlerMethod) handler).getMethod();
+
+        //如果类上有该注解，则执行
+        if(method.isAnnotationPresent(RequiredLogin.class)){
+            //如果注解中required = true则执行
+            if(method.getAnnotation(RequiredLogin.class).required()){
+                //获取需求的权限
+                String requiredRole = method.getAnnotation(RequiredLogin.class).roles();
+
+                try{
+                    //验证token
+                    JWTUtil.verify(accessToken, Constant.SECRET_KEY);
+
+                    //获取token的payload中提供的用户权限
+                    DecodedJWT info = JWTUtil.getTokenInfo(accessToken, Constant.SECRET_KEY);
+                    String userRole = info.getClaim("role").asString();
+
+                    CurrentUser.userName = info.getClaim("user_name").asString();
+                    CurrentUser.role = userRole;
+                    CurrentUser.userMail = info.getClaim("user_mail").asString();
+
+                    //放行
+                    if (Objects.equals(userRole, Constant.SYS_ADMIN)) return true;
+
+                    //进行权限比对
+                    if(!Objects.equals(userRole, requiredRole)) throw new AuthenticationException();
+
+                    return true;
+                }catch (AuthenticationException e){
+                    response.sendError(Constant.PERMISSION_DENIED, "Permission Denied");
+                    return false;
+                } catch (Exception e){
+                    response.sendError(Constant.AUTHENTICATED_FAILED, "Authentication failed");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
