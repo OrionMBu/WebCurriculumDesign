@@ -27,5 +27,5 @@ public class Constant {
     public static final Integer PERMISSION_DENIED = 403;//无权限
 
     //随机字符集
-    public static final String CHARACTER_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=<>?";//随机字符集
+    public static final String CHARACTER_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//随机字符集
 }
