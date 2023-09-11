@@ -52,6 +52,9 @@ public class AuthService {
 
     //获取邮件验证码
     public Result getMailVerificationCode(String userMail) {
+
+        if (!userMail.contains("@")) return Result.error(Constant.REQUEST_FAILED, "邮件格式错误");
+
         //判断邮箱是否被注册
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("user_mail", userMail);
         User user = userMapper.selectOne(queryWrapper);
