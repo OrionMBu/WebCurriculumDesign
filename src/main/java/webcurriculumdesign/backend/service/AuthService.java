@@ -51,14 +51,14 @@ public class AuthService {
     }
 
     //获取邮件验证码
-    public Result getMailVerificationCode(String userMail) {
+    public Result getMailVerificationCode(String userMail, String flag) {
 
         if (!userMail.contains("@")) return Result.error(Constant.REQUEST_FAILED, "邮件格式错误");
 
         //判断邮箱是否被注册
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("user_mail", userMail);
         User user = userMapper.selectOne(queryWrapper);
-        if (user != null) return Result.error(Constant.REQUEST_FAILED, "邮箱已被注册");
+        if (user != null && !flag.equals("false")) return Result.error(Constant.REQUEST_FAILED, "邮箱已被注册");
 
         //生成邮件验证码
         String mailVerificationCode = CommonUtil.generateRandomString(Integer.parseInt(staticValue.getValue("mail_verification_code_length")));

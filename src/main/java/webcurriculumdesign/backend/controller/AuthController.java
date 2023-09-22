@@ -30,10 +30,13 @@ public class AuthController {
      * 获取邮箱验证码
      *
      * @param userMail 用户邮箱
+     * @param flag 是否需要判断邮箱有效性
+     *
      */
     @PostMapping("/getMailVerificationCode")
-    public Result getMailVerificationCode(@RequestParam String userMail) {
-        return authService.getMailVerificationCode(userMail);
+    public Result getMailVerificationCode(@RequestParam String userMail,
+                                          @RequestParam(required = false, defaultValue = "true") String flag) {
+        return authService.getMailVerificationCode(userMail, flag);
     }
 
     /**
