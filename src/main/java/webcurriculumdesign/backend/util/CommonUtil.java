@@ -1,6 +1,6 @@
 package webcurriculumdesign.backend.util;
 
-import webcurriculumdesign.backend.data.Constant;
+import webcurriculumdesign.backend.data.enums.Constant;
 
 import java.util.Random;
 

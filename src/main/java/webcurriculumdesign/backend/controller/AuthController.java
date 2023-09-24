@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.AuthService;
 
@@ -23,7 +24,7 @@ public class AuthController {
      */
     @PostMapping("/signUp")
     public Result signUp(@RequestParam String userMail, @RequestParam String password, @RequestParam String mailVerificationCode) {
-        return authService.signUp(userMail, password, mailVerificationCode);
+        return authService.signUp(userMail, password, mailVerificationCode);//TODO 注册可选身份
     }
 
     /**
@@ -48,5 +49,17 @@ public class AuthController {
     @PostMapping("/login")
     public Result login(@RequestParam String account, String password) {
         return authService.login(account, password);
+    }
+
+    /**
+     * 通过邮箱更新用户密码
+     *
+     * @param verificationCode 邮件验证码
+     * @param newPassword 新密码
+     */
+    @RequiredLogin(roles = "ALL")
+    @PostMapping("updatePassword")
+    public Result updatePassword(@RequestParam String verificationCode, @RequestParam String newPassword) {
+        return authService.updatePassword(verificationCode, newPassword);
     }
 }

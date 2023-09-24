@@ -3,10 +3,12 @@ package webcurriculumdesign.backend.interceptor;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.catalina.connector.Response;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
-import webcurriculumdesign.backend.data.Constant;
+import webcurriculumdesign.backend.data.enums.Constant;
+import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.util.JWTUtil;
 
@@ -52,18 +54,21 @@ public class Interceptor implements HandlerInterceptor {
                     CurrentUser.role = userRole;
                     CurrentUser.userMail = info.getClaim("user_mail").asString();
 
-                    //放行
-                    if (Objects.equals(userRole, Constant.SYS_ADMIN)) return true;
+                    //放行ADMIN
+                    if (Objects.equals(userRole, Role.ADMIN)) return true;
+
+                    //权限需求为ALL则全放行
+                    if (Objects.equals(requiredRole, "ALL")) return true;
 
                     //进行权限比对
                     if(!Objects.equals(userRole, requiredRole)) throw new AuthenticationException();
 
                     return true;
                 }catch (AuthenticationException e){
-                    response.sendError(Constant.PERMISSION_DENIED, "Permission Denied");
+                    response.sendError(Response.SC_FORBIDDEN, "Permission Denied");
                     return false;
                 } catch (Exception e){
-                    response.sendError(Constant.AUTHENTICATED_FAILED, "Authentication failed");
+                    response.sendError(Response.SC_UNAUTHORIZED, "Authentication failed");
                     return false;
                 }
             }

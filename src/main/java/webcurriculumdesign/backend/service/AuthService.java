@@ -1,16 +1,20 @@
 package webcurriculumdesign.backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import jakarta.annotation.Resource;
+import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import webcurriculumdesign.backend.cache.IGlobalCache;
-import webcurriculumdesign.backend.data.Constant;
+import webcurriculumdesign.backend.data.enums.Constant;
 import webcurriculumdesign.backend.data.dao.MessageDao;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
+import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.po.User;
+import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.data.pojo.MailTemplate;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.UserMapper;
@@ -41,11 +45,11 @@ public class AuthService {
         //校验邮件验证码
         String redisIKey = "MailVerificationCode-" + userMail;
         String trueCode = (String) iGlobalCache.get(redisIKey);
-        if (trueCode == null || !trueCode.equals(mailVerificationCode)) return Result.error(Constant.AUTHENTICATED_FAILED, "验证码有误");
+        if (trueCode == null || !trueCode.equals(mailVerificationCode)) return Result.error(Response.SC_UNAUTHORIZED, "验证码有误");
 
         //密码加密并存储
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        userMapper.insert(new User(null, userMail, hashedPassword, null, Constant.STUDENT));
+        userMapper.insert(new User(null, userMail, hashedPassword, null, Role.STUDENT));
 
         return Result.ok();
     }
@@ -53,12 +57,12 @@ public class AuthService {
     //获取邮件验证码
     public Result getMailVerificationCode(String userMail, String flag) {
 
-        if (!userMail.contains("@")) return Result.error(Constant.REQUEST_FAILED, "邮件格式错误");
+        if (!userMail.contains("@")) return Result.error(Response.SC_BAD_REQUEST, "邮件格式错误");
 
         //判断邮箱是否被注册
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("user_mail", userMail);
         User user = userMapper.selectOne(queryWrapper);
-        if (user != null && !flag.equals("false")) return Result.error(Constant.REQUEST_FAILED, "邮箱已被注册");
+        if (user != null && !flag.equals("false")) return Result.error(Response.SC_BAD_REQUEST, "邮箱已被注册");
 
         //生成邮件验证码
         String mailVerificationCode = CommonUtil.generateRandomString(Integer.parseInt(staticValue.getValue("mail_verification_code_length")));
@@ -89,8 +93,8 @@ public class AuthService {
         try {
             iGlobalCache.set(redisIKey, mailVerificationCode, Constant.MAIL_VERIFICATION_CODE_EXPIRE_TIME);
         } catch (Exception e) {
-            e.printStackTrace();
-            return Result.error(Constant.UNKNOWN_ERROR, "Redis存储异常");
+            System.out.println(e.getMessage());
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "Redis存储异常");
         }
         return Result.ok();
     }
@@ -100,10 +104,10 @@ public class AuthService {
         //查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("user_mail", account).or().eq("user_name", account);
         User user = userMapper.selectOne(queryWrapper);
-        if (user == null) return Result.error(Constant.REQUEST_FAILED, "用户不存在");
+        if (user == null) return Result.error(Response.SC_BAD_REQUEST, "用户不存在");
 
         //判断密码是否正确
-        if (!BCrypt.checkpw(password, user.getPassword())) return Result.error(Constant.AUTHENTICATED_FAILED, "密码错误");
+        if (!BCrypt.checkpw(password, user.getPassword())) return Result.error(Response.SC_UNAUTHORIZED, "密码错误");
 
         //生成accessToken和refreshToken
         try{
@@ -118,8 +122,35 @@ public class AuthService {
 
             return Result.success(map);
         } catch (Exception e){
-            e.printStackTrace();
-            return Result.error(Constant.UNKNOWN_ERROR, "错误");
+            System.out.println(e.getMessage());
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
         }
+    }
+
+    //通过邮箱更新用户密码
+    public Result updatePassword(String verificationCode, String newPassword) {
+        String userMail = CurrentUser.userMail;
+        String redisIKey = "MailVerificationCode-" + userMail;
+
+        //校验验证码
+        if (iGlobalCache.get(redisIKey) == null || !iGlobalCache.get(redisIKey).equals(verificationCode)) {
+            return Result.error(Response.SC_UNAUTHORIZED, "验证码错误");
+        }
+
+        //更新密码
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper
+                .eq("user_mail", userMail)
+                .set("password", hashedPassword);
+
+        try {
+            userMapper.update(null, updateWrapper);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "密码更新失败");
+        }
+
+        return Result.success(null);
     }
 }

@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredLogin {
     boolean required() default true;
-    String roles() default "Student";
+    String roles() default "ADMIN";
 }
