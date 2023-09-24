@@ -18,7 +18,7 @@ public class BaseController {
      * 获取主目录
      *
      */
-    @RequiredLogin
+    @RequiredLogin(roles = "ALL")
     @PostMapping("/getMainMenu")
     public Result getMainMenu() {
         return Result.success(basicService.getMainMenu());
