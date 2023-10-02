@@ -14,7 +14,6 @@ import webcurriculumdesign.backend.data.dao.MessageDao;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.po.User;
-import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.data.pojo.MailTemplate;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.UserMapper;
@@ -60,7 +59,7 @@ public class AuthService {
         if (!userMail.contains("@")) return Result.error(Response.SC_BAD_REQUEST, "邮件格式错误");
 
         //判断邮箱是否被注册
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("user_mail", userMail);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", userMail);
         User user = userMapper.selectOne(queryWrapper);
         if (user != null && !flag.equals("false")) return Result.error(Response.SC_BAD_REQUEST, "邮箱已被注册");
 
@@ -102,7 +101,7 @@ public class AuthService {
     //通过邮箱或昵称登录
     public Result login(String account, String password) {
         //查询用户是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("user_mail", account).or().eq("user_name", account);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", account).or().eq("name", account);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) return Result.error(Response.SC_BAD_REQUEST, "用户不存在");
 
@@ -111,10 +110,10 @@ public class AuthService {
 
         //生成accessToken和refreshToken
         try{
-            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getUserMail(), user.getUserName(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY);
-            iGlobalCache.set(user.getUserMail(), refreshToken, Constant.REFRESH_EXPIRE_TIME);
+            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getMail(), user.getName(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY);
+            iGlobalCache.set(user.getMail(), refreshToken, Constant.REFRESH_EXPIRE_TIME);
 
-            String token = JWTUtil.getTokenWithPayLoad(user.getUserMail(), user.getUserName(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY);
+            String token = JWTUtil.getTokenWithPayLoad(user.getMail(), user.getName(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY);
 
             Map<String, String> map = new HashMap<>();
             map.put("accessToken", token);
@@ -128,8 +127,7 @@ public class AuthService {
     }
 
     //通过邮箱更新用户密码
-    public Result updatePassword(String verificationCode, String newPassword) {
-        String userMail = CurrentUser.userMail;
+    public Result updatePassword(String verificationCode, String userMail, String newPassword) {
         String redisIKey = "MailVerificationCode-" + userMail;
 
         //校验验证码
@@ -141,7 +139,7 @@ public class AuthService {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper
-                .eq("user_mail", userMail)
+                .eq("mail", userMail)
                 .set("password", hashedPassword);
 
         try {

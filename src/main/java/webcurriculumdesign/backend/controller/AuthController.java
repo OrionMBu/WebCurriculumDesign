@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.AuthService;
 
@@ -55,11 +54,11 @@ public class AuthController {
      * 通过邮箱更新用户密码
      *
      * @param verificationCode 邮件验证码
+     * @param userMail 用户邮箱
      * @param newPassword 新密码
      */
-    @RequiredLogin(roles = "ALL")
     @PostMapping("updatePassword")
-    public Result updatePassword(@RequestParam String verificationCode, @RequestParam String newPassword) {
-        return authService.updatePassword(verificationCode, newPassword);
+    public Result updatePassword(@RequestParam String verificationCode, @RequestParam String userMail, @RequestParam String newPassword) {
+        return authService.updatePassword(verificationCode, userMail, newPassword);
     }
 }

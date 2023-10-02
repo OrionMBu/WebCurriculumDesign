@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 public class User {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String userMail;
+    private String mail;
     private String password;
-    private String userName;
+    private String name;
     private String role;
 }
