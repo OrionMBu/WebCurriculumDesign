@@ -20,6 +20,7 @@ public class MainMenu {
     private String name;
     private Integer parentId;
     private String role;
+    private String route;
     @TableField(exist = false)
     private List<MainMenu> children;
 }
