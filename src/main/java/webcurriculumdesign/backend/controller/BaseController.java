@@ -21,6 +21,6 @@ public class BaseController {
     @RequiredLogin(roles = "ALL")
     @PostMapping("/getMainMenu")
     public Result getMainMenu() {
-        return Result.success(basicService.getMainMenu());
+        return basicService.getMainMenu();
     }
 }
