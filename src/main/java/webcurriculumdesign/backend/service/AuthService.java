@@ -121,6 +121,7 @@ public class AuthService {
             Map<String, String> map = new HashMap<>();
             map.put("accessToken", accessToken);
             map.put("refreshToken", refreshToken);
+            map.put("role", user.getRole());
 
             return Result.success(map);
         } catch (Exception e){
