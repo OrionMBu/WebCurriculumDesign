@@ -1,10 +1,7 @@
 package webcurriculumdesign.backend.controller;
 
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.AuthService;
 
@@ -61,4 +58,15 @@ public class AuthController {
     public Result updatePassword(@RequestParam String verificationCode, @RequestParam String userMail, @RequestParam String newPassword) {
         return authService.updatePassword(verificationCode, userMail, newPassword);
     }
+
+    /**
+     * 更新accessToken
+     *
+     * @param refreshToken refreshToken
+     */
+    @PostMapping("/refresh")
+    public Result refresh(@RequestParam String refreshToken) {
+        return authService.refresh(refreshToken);
+    }
+
 }

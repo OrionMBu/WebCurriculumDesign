@@ -27,7 +27,7 @@ public class BasicService {
     //添加新目录
     public Result addMenu(String name, Integer parent_id, String role, String route) {
         //判断用户组（role）正确性
-        if (!role.equals(Role.ADMIN) && !role.equals(Role.STUDENT) && !role.equals(Role.TEACHER)) {
+        if (!role.equals(Role.ADMIN.role) && !role.equals(Role.STUDENT.role) && !role.equals(Role.TEACHER.role)) {
             return Result.error(Response.SC_BAD_REQUEST, "用户组错误");
         }
 
