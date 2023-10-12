@@ -28,7 +28,7 @@ public class MailService {
             helper.setText(mailTemplate.getContent(), mailTemplate.isHtml());
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

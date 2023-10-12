@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.vo.Result;
-import webcurriculumdesign.backend.service.BasicService;
+import webcurriculumdesign.backend.service.BaseService;
 
 @RestController
 @RequestMapping("/base")
 public class BaseController {
     @Resource
-    BasicService basicService;
+    BaseService baseService;
 
     /**
      * 获取主目录
@@ -22,7 +22,7 @@ public class BaseController {
     @RequiredLogin(roles = "ALL")
     @PostMapping("/getMainMenu")
     public Result getMainMenu() {
-        return basicService.getMainMenu();
+        return baseService.getMainMenu();
     }
 
     /**
@@ -36,6 +36,6 @@ public class BaseController {
     @RequiredLogin(roles = "ALL")
     @PostMapping("/addMenu")
     public Result addMenu(@RequestParam String name, @RequestParam Integer parent_id, @RequestParam String role, @RequestParam String route) {
-        return basicService.addMenu(name, parent_id, role, route);
+        return baseService.addMenu(name, parent_id, role, route);
     }
 }
