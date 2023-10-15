@@ -42,5 +42,5 @@ public class Constant {
     /*
     前置URL
      */
-    public static final String PREFIX_URL = "https://eternalavalon.top/resources";
+    public static final String PREFIX_URL = "https://eternalavalon.top/WebResources";
 }
