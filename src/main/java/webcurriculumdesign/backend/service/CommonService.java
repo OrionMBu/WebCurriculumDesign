@@ -19,16 +19,17 @@ public class CommonService {
     StaticValueDao staticValueDao;
 
     /**
-     * 上传文件
+     * 上传文件到指定路径
      *
      * @param file 文件
      * @param folderName 文件夹名（服务名）
      * @param fileName 文件名
-     * @return 文件路径
+     * @param isBaseFile 是否为基础文件
+     * @return 文件路径 PREFIX_URL/userMail或BaseFile/folderName/filename
      * @throws IOException IO异常
      * @throws FileUploadException 文件异常
      */
-    public String uploadFile(MultipartFile file, String folderName, String fileName) throws IOException, FileUploadException {
+    public String uploadFile(MultipartFile file, String folderName, String fileName, boolean isBaseFile) throws IOException, FileUploadException {
         // 判断文件是否为空
         if (file.isEmpty()) {
             throw new FileUploadException("上传文件为空");
@@ -44,9 +45,15 @@ public class CommonService {
 
         // 获取文件地址
         StringBuilder builder = new StringBuilder(staticValueDao.getValue("file_path"));
+        int preLength = builder.length();
 
-        // 以邮箱创建文件地址
-        File parentFile = new File(builder.append("/").append(CurrentUser.userMail).toString());
+        // 以用户邮箱或固定基础地址（BaseFile）创建文件地址
+        File parentFile;
+        if (isBaseFile) {
+            parentFile = new File(builder.append("/").append("BaseFile").toString());
+        } else {
+            parentFile = new File(builder.append("/").append(CurrentUser.userMail).toString());
+        }
         if (!parentFile.exists() && !parentFile.mkdirs())
             throw new FileUploadException("父文件夹创建失败");
 
@@ -61,6 +68,8 @@ public class CommonService {
         // 将文件保存到指定目录
         Files.write(Paths.get(specificFile.getPath()), fileBytes);
 
-        return Constant.PREFIX_URL + "/" + CurrentUser.userMail + "/" + folderName + "/" + fileName;
+        builder.replace(0, preLength, Constant.PREFIX_URL);
+
+        return builder.toString();
     }
 }

@@ -22,7 +22,7 @@ public class LocalTestController {
     @PostMapping("/file")
     public String upload(@RequestParam("fileToUpload") MultipartFile file) {
         try {
-            return commonService.uploadFile(file, "test", "drinking_coffee.png");
+            return commonService.uploadFile(file, "test", "drinking_coffee.png", false);
         } catch (IOException e) {
             e.printStackTrace();
             return "IO错误";
