@@ -39,7 +39,7 @@ public class BaseService {
         }
 
         try {
-            mainMenuMapper.insert(new MainMenu(null, name, parent_id, role, route, null));
+            mainMenuMapper.insert(new MainMenu(null, name, parent_id, role, route, null, null));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "服务器错误");
