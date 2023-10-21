@@ -45,6 +45,11 @@ public class MainMenu {
     private String route;
 
     /*
+    图标
+     */
+    private String icon;
+
+    /*
     子节点（不存储）
      */
     @TableField(exist = false)
