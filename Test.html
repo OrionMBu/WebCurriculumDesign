@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<h1>Fetch GET and POST Example</h1>
+
+<h2>GET Request</h2>
+<div id="get-response"></div>
+
+<h2>POST Request</h2>
+<div id="post-response"></div>
+
+<script>
+    // 发送GET请求
+    fetch('http://localhost:8000/test/hello')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text(); // 使用response.text()来获取字符串响应
+        })
+        .then(data => {
+            // 处理字符串响应
+            console.log('auth: ' + data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    fetch('http://localhost:8000/base/hello')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text(); // 使用response.text()来获取字符串响应
+        })
+        .then(data => {
+            // 处理字符串响应
+            console.log('base: ' + data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+</script>
+</body>
+</html>
