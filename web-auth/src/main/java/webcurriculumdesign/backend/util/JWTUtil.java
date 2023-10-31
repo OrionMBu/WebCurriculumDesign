@@ -25,11 +25,6 @@ public class JWTUtil {
         return builder.withExpiresAt(instance.getTime()).sign(Algorithm.HMAC256(key));
     }
 
-    //验证token
-    public static void verify(String token, String key) {
-        JWT.require(Algorithm.HMAC256(key)).build().verify(token);
-    }
-
     //返回token内容
     public static DecodedJWT getTokenInfo(String token, String key) {
         return JWT.require(Algorithm.HMAC256(key)).build().verify(token);
