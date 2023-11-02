@@ -29,7 +29,7 @@ import java.util.Objects;
 
 @Service
 public class AuthService {
-    @Resource
+    @Resource(name = "cache")
     IGlobalCache iGlobalCache;
     @Resource
     private SpringTemplateEngine templateEngine;
@@ -156,6 +156,7 @@ public class AuthService {
         return Result.success(null);
     }
 
+    // 刷新token
     public Result refresh(String refreshToken) {
         try {
             // 获取refreshToken的payload信息

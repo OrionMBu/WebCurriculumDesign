@@ -11,6 +11,7 @@ spring:
         server-addr: eternalavalon.top:8848
         username: nacos
         password: 0nlinNacos
+        group: WebTeam
       config:
         server-addr: eternalavalon.top:8848
         username: nacos

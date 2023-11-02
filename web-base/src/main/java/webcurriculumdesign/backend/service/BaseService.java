@@ -1,17 +1,21 @@
 package webcurriculumdesign.backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
+import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.pojo.Constant;
 import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.exception.FileUploadException;
 import webcurriculumdesign.backend.mapper.MainMenuMapper;
+import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.MenuUtil;
 
 import java.io.File;
@@ -26,7 +30,39 @@ public class BaseService {
     MainMenuMapper mainMenuMapper;
 
     @Resource
+    UserMapper userMapper;
+
+    @Resource
     StaticValueDao staticValueDao;
+
+    @Resource
+    UserService userService;
+
+    // 更新用户密码
+    public Result updatePassword(String previousPassword, String newPassword) {
+        // 获取用户
+        User user = userService.getUser(CurrentUser.userMail);
+        if (user == null) return Result.error(Response.SC_BAD_REQUEST, "用户不存在");
+
+        // 判断密码是否正确
+        if (!BCrypt.checkpw(previousPassword, user.getPassword())) return Result.error(Response.SC_UNAUTHORIZED, "密码错误");
+
+        // 更新密码
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper
+                .set("password", hashedPassword)
+                .eq("mail", user.getMail());
+        try {
+            userMapper.update(null, updateWrapper);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "密码更新失败");
+        }
+
+        return Result.success(null);
+    }
 
     // 获取主目录
     public Result getMainMenu() {

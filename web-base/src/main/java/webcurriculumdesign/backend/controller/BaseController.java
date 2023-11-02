@@ -12,9 +12,16 @@ public class BaseController {
     @Resource
     BaseService baseService;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello";
+    /**
+     * 更新用户密码（需要登录）
+     *
+     * @param previousPassword 旧密码
+     * @param newPassword 新密码
+     */
+    @RequiredLogin(roles = "ALL")
+    @PostMapping("/updatePassword")
+    public Result updatePassword(@RequestParam String previousPassword, @RequestParam String newPassword) {
+        return baseService.updatePassword(previousPassword, newPassword);
     }
 
     /**
