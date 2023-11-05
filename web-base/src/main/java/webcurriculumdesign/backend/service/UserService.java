@@ -8,6 +8,7 @@ import webcurriculumdesign.backend.data.po.User;
 @FeignClient(value = "web-user", path = "/user")
 public interface UserService {
 
+    // 获取用户信息
     @PostMapping("/getUser/{account}")
     User getUser(@PathVariable("account") String account);
 }

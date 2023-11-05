@@ -3,8 +3,12 @@ package webcurriculumdesign.backend.controller;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
+import webcurriculumdesign.backend.data.dto.FileToUpload;
 import webcurriculumdesign.backend.data.vo.Result;
+import webcurriculumdesign.backend.exception.FileUploadException;
 import webcurriculumdesign.backend.service.BaseService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/base")
@@ -45,6 +49,19 @@ public class BaseController {
     @PostMapping("/addMenu")
     public Result addMenu(@RequestParam String name, @RequestParam Integer parent_id, @RequestParam String role, @RequestParam String route) {
         return baseService.addMenu(name, parent_id, role, route);
+    }
+
+    //----------------------内部微服务接口----------------------//
+
+    /**
+     * 上传文件
+     *
+     * @param fileToUpload 文件信息
+     * @return 文件路径
+     */
+    @PostMapping("/uploadFile")
+    public String uploadFile(@RequestBody FileToUpload fileToUpload) throws IOException, FileUploadException {
+        return baseService.uploadFile(fileToUpload.getFileBytes(), fileToUpload.getUserMail(), fileToUpload.getFolderName(), fileToUpload.getFileName(), fileToUpload.isBaseFile());
     }
 }
 

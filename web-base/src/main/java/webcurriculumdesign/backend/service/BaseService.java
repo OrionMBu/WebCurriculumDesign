@@ -5,7 +5,6 @@ import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
@@ -98,7 +97,7 @@ public class BaseService {
     /**
      * 上传文件到指定路径
      *
-     * @param file 文件
+     * @param fileBytes 文件
      * @param folderName 文件夹名（服务名）
      * @param fileName 文件名
      * @param isBaseFile 是否为基础文件
@@ -106,18 +105,10 @@ public class BaseService {
      * @throws IOException IO异常
      * @throws FileUploadException 文件异常
      */
-    public String uploadFile(MultipartFile file, String folderName, String fileName, boolean isBaseFile) throws IOException, FileUploadException {
+    public String uploadFile(byte[] fileBytes, String userMail,String folderName, String fileName, boolean isBaseFile) throws IOException, FileUploadException {
         // 判断文件是否为空
-        if (file.isEmpty()) {
+        if (fileBytes.length == 0) {
             throw new FileUploadException("上传文件为空");
-        }
-
-        byte[] fileBytes;
-        try {
-            // 获取文件内容
-            fileBytes = file.getBytes();
-        } catch (IOException e) {
-            throw new FileUploadException("获取文件异常");
         }
 
         // 获取文件地址
@@ -129,7 +120,7 @@ public class BaseService {
         if (isBaseFile) {
             parentFile = new File(builder.append("/").append("BaseFile").toString());
         } else {
-            parentFile = new File(builder.append("/").append(CurrentUser.userMail).toString());
+            parentFile = new File(builder.append("/").append(userMail).toString());
         }
         if (!parentFile.exists() && !parentFile.mkdirs())
             throw new FileUploadException("父文件夹创建失败");
@@ -145,6 +136,7 @@ public class BaseService {
         // 将文件保存到指定目录
         Files.write(Paths.get(specificFile.getPath()), fileBytes);
 
+        // 生成文件路径
         builder.replace(0, preLength, Constant.PREFIX_URL);
 
         return builder.toString();
