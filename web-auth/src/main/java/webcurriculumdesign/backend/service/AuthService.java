@@ -51,7 +51,7 @@ public class AuthService {
 
         // 密码加密并存储
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        userMapper.insert(new User(null, userMail, hashedPassword, null, Role.STUDENT.role));
+        userMapper.insert(new User(null, userMail, hashedPassword, null, Role.STUDENT.role, null));
 
         return Result.ok();
     }
@@ -118,10 +118,11 @@ public class AuthService {
 
             String accessToken = JWTUtil.getTokenWithPayLoad(user.getMail(), user.getName(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
 
-            Map<String, String> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             map.put("accessToken", accessToken);
             map.put("refreshToken", refreshToken);
             map.put("role", user.getRole());
+            map.put("profile", user.getProfile());
 
             return Result.success(map);
         } catch (Exception e){

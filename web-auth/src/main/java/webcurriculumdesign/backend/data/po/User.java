@@ -40,4 +40,9 @@ public class User {
     用户权限
      */
     private String role;
+
+    /*
+    用户头像
+     */
+    private String profile;
 }
