@@ -42,10 +42,17 @@ public class UserService {
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "文件获取异常");
         }
 
+        // 获取上传文件的原始文件名
+        String originalFilename = file.getOriginalFilename();
+
+        // 从原始文件名中提取文件扩展名
+        assert originalFilename != null;
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+
         // 保存图片
         String userProfile;
         try {
-            userProfile = baseService.uploadFile(new FileToUpload(fileBytes, CurrentUser.userMail, "Profile", file.getOriginalFilename(), false));
+            userProfile = baseService.uploadFile(new FileToUpload(fileBytes, CurrentUser.userMail, "Profile", "profile" + fileExtension, false));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "头像上传失败");
