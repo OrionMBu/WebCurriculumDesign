@@ -99,6 +99,7 @@ public class BaseService {
         return Result.ok();
     }
 
+    // 获取最新新闻
     public Result getLatestNews(int number) {
         List<News> latestNewsList = newsMapper.getLatestNews(number);
         return Result.success(latestNewsList);
