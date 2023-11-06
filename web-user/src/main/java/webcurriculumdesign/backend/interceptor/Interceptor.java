@@ -59,7 +59,7 @@ public class Interceptor implements HandlerInterceptor {
                     String userRole = info.getClaim("role").asString();
 
                     // 存储当前用户信息
-                    CurrentUser.id = info.getClaim("id").asInt();
+                    CurrentUser.id = Integer.parseInt(info.getClaim("id").asString());
                     CurrentUser.userName = info.getClaim("user_name").asString();
                     CurrentUser.role = userRole;
                     CurrentUser.userMail = info.getClaim("user_mail").asString();
