@@ -51,6 +51,11 @@ public class BaseController {
         return baseService.addMenu(name, parent_id, role, route);
     }
 
+    @GetMapping("/getNews")
+    public Result getNews(@RequestParam(required = false, defaultValue = "3") int number) {
+        return baseService.getLatestNews(number);
+    }
+
     //----------------------内部微服务接口----------------------//
 
     /**

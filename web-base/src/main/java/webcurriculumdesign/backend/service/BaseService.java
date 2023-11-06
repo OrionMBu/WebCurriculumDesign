@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
+import webcurriculumdesign.backend.data.po.News;
 import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.pojo.Constant;
 import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.exception.FileUploadException;
 import webcurriculumdesign.backend.mapper.MainMenuMapper;
+import webcurriculumdesign.backend.mapper.NewsMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.MenuUtil;
 
@@ -30,6 +32,9 @@ public class BaseService {
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    NewsMapper newsMapper;
 
     @Resource
     StaticValueDao staticValueDao;
@@ -92,6 +97,11 @@ public class BaseService {
         }
 
         return Result.ok();
+    }
+
+    public Result getLatestNews(int number) {
+        List<News> latestNewsList = newsMapper.getLatestNews(number);
+        return Result.success(latestNewsList);
     }
 
     /**
