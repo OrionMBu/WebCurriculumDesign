@@ -30,4 +30,9 @@ public class News {
     新闻正文
      */
     private String content;
+
+    /*
+    新闻地址
+     */
+    private String address;
 }
