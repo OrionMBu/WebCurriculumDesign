@@ -5,6 +5,11 @@ package webcurriculumdesign.backend.data.pojo;
  */
 public class CurrentUser {
     /*
+    用户id
+    */
+    public static Integer id;
+
+    /*
     用户昵称
      */
     public static String userName;

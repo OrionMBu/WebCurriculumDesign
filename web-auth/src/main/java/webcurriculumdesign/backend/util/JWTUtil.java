@@ -30,8 +30,9 @@ public class JWTUtil {
         return JWT.require(Algorithm.HMAC256(key)).build().verify(token);
     }
 
-    public static String getTokenWithPayLoad(String userMail, String userName, String role, int expireTime, String key, String type) {
+    public static String getTokenWithPayLoad(String id, String userMail, String userName, String role, int expireTime, String key, String type) {
         Map<String, String> map = new HashMap<>();
+        map.put("id", id);
         map.put("user_mail", userMail);
         map.put("user_name", userName);
         map.put("role", role);
