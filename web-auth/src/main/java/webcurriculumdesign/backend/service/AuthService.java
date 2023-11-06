@@ -123,6 +123,8 @@ public class AuthService {
             map.put("refreshToken", refreshToken);
             map.put("role", user.getRole());
             map.put("profile", user.getProfile());
+            map.put("name", user.getName());
+            map.put("mail", user.getMail());
 
             return Result.success(map);
         } catch (Exception e){
