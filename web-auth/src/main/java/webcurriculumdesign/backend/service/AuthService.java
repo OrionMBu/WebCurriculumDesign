@@ -113,17 +113,17 @@ public class AuthService {
 
         // 生成accessToken和refreshToken
         try{
-            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getName(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
+            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getNickName(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
             iGlobalCache.set(user.getMail(), refreshToken, Constant.REFRESH_EXPIRE_TIME);
 
-            String accessToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getName(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
+            String accessToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getNickName(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
 
             Map<String, Object> map = new HashMap<>();
             map.put("accessToken", accessToken);
             map.put("refreshToken", refreshToken);
             map.put("role", user.getRole());
             map.put("profile", user.getProfile());
-            map.put("name", user.getName());
+            map.put("name", user.getNickName());
             map.put("mail", user.getMail());
 
             return Result.success(map);
