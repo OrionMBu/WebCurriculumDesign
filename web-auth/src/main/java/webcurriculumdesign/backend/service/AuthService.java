@@ -104,7 +104,7 @@ public class AuthService {
     // 通过邮箱或昵称登录
     public Result login(String account, String password) {
         // 查询用户是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", account).or().eq("name", account);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", account).or().eq("nick_name", account);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) return Result.error(Response.SC_BAD_REQUEST, "用户不存在");
 
