@@ -34,7 +34,7 @@ public class User {
     /*
     用户昵称
      */
-    private String name;
+    private String nickName;
 
     /*
     用户权限
