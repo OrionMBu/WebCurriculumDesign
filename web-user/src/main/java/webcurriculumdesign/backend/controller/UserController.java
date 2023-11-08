@@ -25,6 +25,16 @@ public class UserController {
         return userService.changeProfile(file);
     }
 
+    /**
+     * 获取用户申请结果
+     *
+     */
+    @RequiredLogin(roles = "ALL")
+    @GetMapping("/getAuditResult")
+    public Result getAuditResult() {
+        return userService.getAuditResult();
+    }
+
 
     //----------------------内部微服务接口----------------------//
 
