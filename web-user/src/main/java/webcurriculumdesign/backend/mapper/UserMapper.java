@@ -7,6 +7,6 @@ import webcurriculumdesign.backend.data.po.User;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    @Select("SELECT * from user where mail=#{account} or nick_name=#{account}")
+    @Select("SELECT * from info_user where mail=#{account} or nick_name=#{account}")
     User getUser(String account);
 }

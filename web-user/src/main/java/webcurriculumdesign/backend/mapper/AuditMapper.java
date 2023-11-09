@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface AuditMapper extends BaseMapper<Audit> {
-    @Select("SELECT * FROM audit where applicant=#{applicantId}")
+    @Select("SELECT * FROM basic_audit where applicant=#{applicantId}")
     List<Audit> getAuditByApplicantId(Integer applicantId);
 }

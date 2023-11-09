@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("news")
+@TableName("basic_news")
 public class News {
     /*
     主键id

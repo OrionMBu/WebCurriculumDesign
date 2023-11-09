@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface NewsMapper extends BaseMapper<News> {
-    @Select("SELECT * FROM news ORDER BY id DESC LIMIT #{number}")
+    @Select("SELECT * FROM basic_news ORDER BY id DESC LIMIT #{number}")
     List<News> getLatestNews(int number);
 }

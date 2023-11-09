@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-@TableName("/audit")
+@TableName("basic_audit")
 public class Audit {
     /*
     主键id
