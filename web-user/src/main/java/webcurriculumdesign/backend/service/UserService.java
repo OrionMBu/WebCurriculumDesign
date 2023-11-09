@@ -6,6 +6,7 @@ import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.dto.FileToUpload;
+import webcurriculumdesign.backend.data.enums.Role;
 import webcurriculumdesign.backend.data.po.Audit;
 import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.pojo.CurrentUser;
@@ -14,10 +15,7 @@ import webcurriculumdesign.backend.mapper.AuditMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -26,6 +24,12 @@ public class UserService {
 
     @Resource
     BaseService baseService;
+
+    @Resource
+    StudentService studentService;
+
+    @Resource
+    TeacherService teacherService;
 
     @Resource
     AuditMapper auditMapper;
@@ -79,6 +83,34 @@ public class UserService {
         }
 
         return Result.success(userProfile);
+    }
+
+    // 获取用户列表
+    public Result getUserList(int type) {
+        switch (type) {
+            case 0 -> {
+                return Result.success(userMapper.getUserList());
+            }
+            case 1 -> {
+                return Result.success(userMapper.getUserListByRole(Role.TEACHER.role));
+            }
+            case 2 -> {
+                return Result.success(userMapper.getUserListByRole(Role.STUDENT.role));
+            }
+            default -> {
+                return Result.success(null);
+            }
+        }
+    }
+
+    // 获取用户信息
+    public Result getUserInfo(String userId) {
+        User user = userMapper.selectById(userId);
+        return switch (user.getRole()) {
+            case "TEACHER" -> teacherService.getTeacherByUserId(userId);
+            case "STUDENT" -> studentService.getStudentInfo(userId);
+            default -> Result.success(null);
+        };
     }
 
     // 获取用户申请结果
