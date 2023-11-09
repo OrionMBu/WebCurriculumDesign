@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface MainMenuMapper extends BaseMapper<MainMenu> {
-    @Select("SELECT * FROM main_menu where role=#{role}")
+    @Select("SELECT * FROM main_menu WHERE role=#{role}")
     List<MainMenu> selectMenuTree(String role);
 }

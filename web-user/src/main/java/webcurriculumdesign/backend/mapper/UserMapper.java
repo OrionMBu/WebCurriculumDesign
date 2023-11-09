@@ -9,12 +9,12 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    @Select("SELECT * from info_user where mail=#{account} or nick_name=#{account}")
+    @Select("SELECT * FROM info_user WHERE mail=#{account} OR nick_name=#{account}")
     User getUser(String account);
 
-    @Select("SELECT * from info_user")
+    @Select("SELECT * FROM info_user")
     List<User> getUserList();
 
-    @Select("SELECT * from info_user where role=#{role}")
+    @Select("SELECT * FROM info_user WHERE role=#{role}")
     List<User> getUserListByRole(String role);
 }
