@@ -57,7 +57,7 @@ public class AuthService {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         // 判断用户权限
-        User user = new User(null, userMail, hashedPassword, null, null, null);
+        User user = new User(null, userMail, hashedPassword, userMail, null, null);
         switch (signUpRole) {
             case "0" -> user.setRole(Role.ADMIN.role);
             case "1" -> user.setRole(Role.TEACHER.role);
