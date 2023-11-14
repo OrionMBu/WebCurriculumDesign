@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import webcurriculumdesign.backend.cache.IGlobalCache;
@@ -41,9 +42,12 @@ public class AuthService {
     MessageDao messageDao;
     @Resource
     UserMapper userMapper;
+    @Resource
+    UserService userService;
 
     // 注册
-    public Result signUp(String userMail, String password, String mailVerificationCode) {
+    @Transactional
+    public Result signUp(String userMail, String password, String mailVerificationCode, String signUpRole) {
         // 校验邮件验证码
         String redisIKey = "MailVerificationCode-" + userMail;
         String trueCode = (String) iGlobalCache.get(redisIKey);
@@ -51,7 +55,19 @@ public class AuthService {
 
         // 密码加密并存储
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        userMapper.insert(new User(null, userMail, hashedPassword, null, Role.STUDENT.role, null));
+
+        // 判断用户权限
+        User user = new User(null, userMail, hashedPassword, null, null, null);
+        switch (signUpRole) {
+            case "0" -> user.setRole(Role.ADMIN.role);
+            case "1" -> user.setRole(Role.TEACHER.role);
+            default -> user.setRole(Role.STUDENT.role);
+        }
+
+        // 插入用户
+        userMapper.insert(user);
+        Integer userId = user.getId();
+        userService.insertInfo(userId, Integer.valueOf(signUpRole));
 
         return Result.ok();
     }

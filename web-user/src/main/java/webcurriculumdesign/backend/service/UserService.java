@@ -21,16 +21,14 @@ import java.util.*;
 public class UserService {
     @Resource
     UserMapper userMapper;
-
     @Resource
     BaseService baseService;
-
+    @Resource
+    AdminService adminService;
     @Resource
     StudentService studentService;
-
     @Resource
     TeacherService teacherService;
-
     @Resource
     AuditMapper auditMapper;
 
@@ -89,7 +87,11 @@ public class UserService {
     public Result getUserList(int type) {
         switch (type) {
             case 0 -> {
-                return Result.success(userMapper.getUserList());
+                if (!CurrentUser.role.equals(Role.ADMIN.role)) {
+                    return Result.success(null);
+                } else {
+                    return Result.success(userMapper.getUserListByRole(Role.ADMIN.role));
+                }
             }
             case 1 -> {
                 return Result.success(userMapper.getUserListByRole(Role.TEACHER.role));
@@ -107,8 +109,16 @@ public class UserService {
     public Result getUserInfo(String userId) {
         User user = userMapper.selectById(userId);
         return switch (user.getRole()) {
-            case "TEACHER" -> teacherService.getTeacherByUserId(userId);
-            case "STUDENT" -> studentService.getStudentInfo(userId);
+            case "TEACHER" -> teacherService.getTeacherInfoByUserId(userId);
+            case "STUDENT" -> studentService.getStudentInfoByUserId(userId);
+            case "ADMIN" -> {
+                Result.success(null);
+                if (!CurrentUser.role.equals(Role.ADMIN.role)) {
+                    yield Result.success(null);
+                } else {
+                    yield adminService.getAdminInfoByUserId(userId);
+                }
+            }
             default -> Result.success(null);
         };
     }
@@ -135,5 +145,14 @@ public class UserService {
         }
 
         return Result.success(resultList);
+    }
+
+    // 插入信息（初始化）
+    public void insertInfo(Integer userId, Integer role) {
+        switch (role) {
+            case 0 -> adminService.insertAdminInfo(userId);
+            case 1 -> teacherService.insertTeacherInfo(userId);
+            default -> studentService.insertStudentInfo(userId);
+        }
     }
 }

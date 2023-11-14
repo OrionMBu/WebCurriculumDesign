@@ -22,10 +22,11 @@ public class AuthController {
      * @param userMail 用户邮箱
      * @param password 密码
      * @param mailVerificationCode 邮箱验证码
+     * @param signUpRole 注册时的身份选择（0 -> 管理员，1 -> 教师，2 -> 学生），默认为学生
      */
     @PostMapping("/signUp")
-    public Result signUp(@RequestParam String userMail, @RequestParam String password, @RequestParam String mailVerificationCode) {
-        return authService.signUp(userMail, password, mailVerificationCode);//TODO 注册可选身份
+    public Result signUp(@RequestParam String userMail, @RequestParam String password, @RequestParam String mailVerificationCode, @RequestParam(required = false, defaultValue = "2") String signUpRole) {
+        return authService.signUp(userMail, password, mailVerificationCode, signUpRole);
     }
 
     /**

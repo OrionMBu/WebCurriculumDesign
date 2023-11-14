@@ -1,6 +1,7 @@
 package webcurriculumdesign.backend.controller;
 
 import jakarta.annotation.Resource;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
@@ -29,11 +30,11 @@ public class UserController {
     /**
      * 获取用户列表
      *
-     * @param type 用户类型（0 -> 全部，1 -> 教师，2 -> 学生）
+     * @param type 用户类型（0 -> ADMIN，1 -> 教师，2 -> 学生，其他 -> 全部）
      */
     @RequiredLogin(roles = "ALL")
     @GetMapping("/getUserList")
-    public Result getUserList(@RequestParam(required = false, defaultValue = "0") int type) {
+    public Result getUserList(@RequestParam(required = false, defaultValue = "3") int type) {
         return userService.getUserList(type);
     }
 
@@ -69,5 +70,17 @@ public class UserController {
     @PostMapping("/getUser/{account}")
     public User getUser(@PathVariable("account") String account) {
         return userService.getUser(account);
+    }
+
+    /**
+     * 插入信息（初始化）
+     *
+     * @param userId 用户id
+     * @param role 用户身份（1 -> 教师，2 -> 学生）
+     */
+    @Transactional
+    @PostMapping("/insertInfo")
+    public void insertInfo(@RequestParam Integer userId, @RequestParam Integer role) {
+        userService.insertInfo(userId, role);
     }
 }
