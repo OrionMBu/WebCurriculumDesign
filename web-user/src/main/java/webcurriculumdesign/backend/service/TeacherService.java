@@ -10,6 +10,7 @@ public class TeacherService {
     @Resource
     TeacherMapper teacherMapper;
 
+    // 获取教师信息
     public Result getTeacherByUserId(String userId) {
         return Result.success(teacherMapper.getTeacherByUserId(userId));
     }

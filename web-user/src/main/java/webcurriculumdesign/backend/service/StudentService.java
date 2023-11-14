@@ -11,6 +11,7 @@ public class StudentService {
     @Resource
     StudentMapper studentMapper;
 
+    // 获取学生信息
     public Result getStudentInfo(String userId) {
         return Result.success(studentMapper.getStudentByUserId(userId));
     }
