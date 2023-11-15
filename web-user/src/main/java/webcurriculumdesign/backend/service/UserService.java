@@ -112,7 +112,6 @@ public class UserService {
             case "TEACHER" -> teacherService.getTeacherInfoByUserId(userId);
             case "STUDENT" -> studentService.getStudentInfoByUserId(userId);
             case "ADMIN" -> {
-                Result.success(null);
                 if (!CurrentUser.role.equals(Role.ADMIN.role)) {
                     yield Result.success(null);
                 } else {
