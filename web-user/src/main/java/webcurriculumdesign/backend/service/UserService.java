@@ -100,7 +100,7 @@ public class UserService {
                 return Result.success(userMapper.getUserListByRole(Role.STUDENT.role));
             }
             default -> {
-                return Result.success(null);
+                return Result.success(userMapper.getUserList());
             }
         }
     }
