@@ -15,13 +15,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("info_student")
 public class Student extends BaseInfo{
+
     /*
-    年级
+    专业
      */
-    private int grade;
+    private String major;
+
+    /*
+    学习层次（普通本科/硕士）
+     */
+    private String degree;
+
+    /*
+    学制
+     */
+    private String length;
 
     /*
     班级
      */
     private int classNumber;
+
+    /*
+    学号
+     */
+    private String number;
 }
