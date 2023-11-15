@@ -100,7 +100,12 @@ public class UserService {
                 return Result.success(userMapper.getUserListByRole(Role.STUDENT.role));
             }
             default -> {
-                return Result.success(userMapper.getUserList());
+                if (!CurrentUser.role.equals(Role.ADMIN.role)) {
+                    return Result.success(userMapper.getUserListWithoutAdmin());
+                } else {
+                    return Result.success(userMapper.getUserList());
+                }
+
             }
         }
     }

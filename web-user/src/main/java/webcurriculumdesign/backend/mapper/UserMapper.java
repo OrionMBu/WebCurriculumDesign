@@ -16,6 +16,9 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT * FROM info_user")
     List<UserInfo> getUserList();
 
+    @Select("SELECT * FROM info_user WHERE role <> 'ADMIN'")
+    List<UserInfo> getUserListWithoutAdmin();
+
     @Select("SELECT * FROM info_user WHERE role=#{role}")
     List<UserInfo> getUserListByRole(String role);
 }
