@@ -138,7 +138,12 @@ public class UserService {
             Map<String, Object> auditMap = new HashMap<>();
             auditMap.put("id", audit.getId());
             auditMap.put("name", audit.getName());
-            auditMap.put("status", audit.getStatus());
+            switch (audit.getStatus()) {
+                case 0 -> auditMap.put("status", 0);
+                case 1 -> auditMap.put("status", 33);
+                case 2 -> auditMap.put("status", 67);
+                case 3 -> auditMap.put("status", 100);
+            }
 
             if (audit.getReviewer() != null) {
                 User user = userMapper.selectById(audit.getReviewer());
