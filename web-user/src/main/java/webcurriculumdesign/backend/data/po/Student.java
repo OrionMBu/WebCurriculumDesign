@@ -29,15 +29,20 @@ public class Student extends BaseInfo{
     /*
     学制
      */
-    private String length;
+    private int length;
 
     /*
     班级
      */
-    private int classNumber;
+    private String classNumber;
 
     /*
     学号
      */
     private String number;
+
+    /*
+    特长
+     */
+    private String speciality;
 }

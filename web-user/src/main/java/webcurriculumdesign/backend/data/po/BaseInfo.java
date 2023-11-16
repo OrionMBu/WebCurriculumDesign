@@ -37,11 +37,6 @@ public class BaseInfo {
     private String gender;
 
     /*
-    年龄
-     */
-    private int age;
-
-    /*
     出生日期（YYYY-MM-dd）
      */
     private LocalDate birthday;
