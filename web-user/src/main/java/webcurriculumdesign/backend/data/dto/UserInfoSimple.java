@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class UserInfo {
+public class UserInfoSimple {
     private Integer id;
     private String mail;
     private String nickName;

@@ -3,7 +3,7 @@ package webcurriculumdesign.backend.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import webcurriculumdesign.backend.data.dto.UserInfo;
+import webcurriculumdesign.backend.data.dto.UserInfoSimple;
 import webcurriculumdesign.backend.data.po.User;
 
 import java.util.List;
@@ -14,11 +14,11 @@ public interface UserMapper extends BaseMapper<User> {
     User getUser(String account);
 
     @Select("SELECT * FROM info_user")
-    List<UserInfo> getUserList();
+    List<UserInfoSimple> getUserList();
 
     @Select("SELECT * FROM info_user WHERE role <> 'ADMIN'")
-    List<UserInfo> getUserListWithoutAdmin();
+    List<UserInfoSimple> getUserListWithoutAdmin();
 
     @Select("SELECT * FROM info_user WHERE role=#{role}")
-    List<UserInfo> getUserListByRole(String role);
+    List<UserInfoSimple> getUserListByRole(String role);
 }
