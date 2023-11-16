@@ -1,6 +1,7 @@
 package webcurriculumdesign.backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-public class UserService {
+public class UserService<T> {
     @Resource
     UserMapper userMapper;
     @Resource
@@ -163,5 +164,29 @@ public class UserService {
             case 1 -> teacherService.insertTeacherInfo(userId);
             default -> studentService.insertStudentInfo(userId);
         }
+    }
+
+    // 更新个人信息
+    public void updateUserInfo(T user, BaseMapper<T> mapper, Integer userId) {
+        UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("user_id", userId);
+        mapper.update(user, updateWrapper);
+    }
+
+    public Result updateAppointedUser(Map<String, Object> data) {
+        Integer userId = (Integer) data.get("id");
+        data.remove("id");
+        User user = userMapper.selectById(userId);
+        try {
+            switch (user.getRole()) {
+                case "TEACHER" -> teacherService.updateTeacherInfo(teacherService.getTeacherFromMap(data), userId);
+                case "STUDENT" -> studentService.updateStudentInfo(studentService.getStudentFromMap(data), userId);
+                case "ADMIN" -> adminService.updateAdminInfo(adminService.getAdminFromMap(data), userId);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "更新错误");
+        }
+        return Result.ok();
     }
 }

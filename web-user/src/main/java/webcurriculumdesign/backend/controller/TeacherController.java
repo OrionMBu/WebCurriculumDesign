@@ -6,25 +6,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
-import webcurriculumdesign.backend.data.po.Student;
+import webcurriculumdesign.backend.data.po.Teacher;
 import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
-import webcurriculumdesign.backend.service.StudentService;
+import webcurriculumdesign.backend.service.TeacherService;
 
 @RestController
-@RequestMapping("/student")
-public class StudentController {
+@RequestMapping("/teacher")
+public class TeacherController {
     @Resource
-    StudentService studentService;
+    TeacherService teacherService;
 
     /**
      * 更新用户信息
      *
-     * @param student 待更新信息
+     * @param teacher 待更新信息
      */
-    @RequiredLogin(roles = "STUDENT")
-    @PostMapping("/updateStudentInfo")
-    public Result updateStudentInfo(@RequestBody Student student) {
-        return studentService.updateStudentInfo(student, CurrentUser.id);
+    @RequiredLogin(roles = "TEACHER")
+    @PostMapping("/updateTeacherInfo")
+    public Result updateTeacherInfo(@RequestBody Teacher teacher) {
+        return teacherService.updateTeacherInfo(teacher, CurrentUser.id);
     }
 }

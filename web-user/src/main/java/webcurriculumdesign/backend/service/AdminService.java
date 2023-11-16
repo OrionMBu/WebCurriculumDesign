@@ -6,11 +6,18 @@ import org.springframework.transaction.annotation.Transactional;
 import webcurriculumdesign.backend.data.po.Admin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.AdminMapper;
+import webcurriculumdesign.backend.util.MapUtil;
+
+import java.util.Map;
 
 @Service
 public class AdminService {
     @Resource
+    UserService<Admin> userService;
+    @Resource
     AdminMapper adminMapper;
+    @Resource
+    MapUtil<Admin> mapUtil;
 
     // 获取管理员信息
     public Result getAdminInfoByUserId(String userId) {
@@ -23,5 +30,19 @@ public class AdminService {
         Admin admin = new Admin();
         admin.setUserId(userId);
         adminMapper.insert(admin);
+    }
+
+    // 更新管理员信息
+    public void updateAdminInfo(Admin admin, Integer userId) {
+        try {
+            userService.updateUserInfo(admin, adminMapper, userId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // 从Map获取Admin
+    public Admin getAdminFromMap(Map<String, Object> data) {
+        return mapUtil.setValuesFromMap(data, Admin.class);
     }
 }

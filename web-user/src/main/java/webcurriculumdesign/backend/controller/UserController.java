@@ -5,16 +5,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
+import webcurriculumdesign.backend.data.po.Admin;
 import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.pojo.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.UserService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Resource
-    UserService userService;
+    UserService<Admin> userService;
 
     /**
      * 修改头像
@@ -57,6 +60,17 @@ public class UserController {
     @GetMapping("/getAuditResult")
     public Result getAuditResult() {
         return userService.getAuditResult();
+    }
+
+    /**
+     * 更新指定用户信息
+     *
+     * @param data 用户信息
+     */
+    @RequiredLogin
+    @PostMapping("/updateAppointedUser")
+    public Result updateAppointedUser(@RequestBody Map<String, Object> data) {
+        return userService.updateAppointedUser(data);
     }
 
 
