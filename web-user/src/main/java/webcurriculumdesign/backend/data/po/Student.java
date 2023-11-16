@@ -29,7 +29,7 @@ public class Student extends BaseInfo{
     /*
     学制
      */
-    private int length;
+    private String length;
 
     /*
     班级
