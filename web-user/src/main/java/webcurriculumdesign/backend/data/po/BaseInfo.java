@@ -1,6 +1,7 @@
 package webcurriculumdesign.backend.data.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,6 +55,7 @@ public class BaseInfo {
     /*
     学院
      */
+    @TableField(exist = false)
     private String academy;
 
     /*
