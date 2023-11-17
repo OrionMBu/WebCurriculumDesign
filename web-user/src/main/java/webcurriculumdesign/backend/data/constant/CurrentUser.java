@@ -1,4 +1,4 @@
-package webcurriculumdesign.backend.data.pojo;
+package webcurriculumdesign.backend.data.constant;
 
 /**
  * 存储当前访问用户信息
@@ -6,7 +6,7 @@ package webcurriculumdesign.backend.data.pojo;
 public class CurrentUser {
     /*
     用户id
-    */
+     */
     public static Integer id;
 
     /*

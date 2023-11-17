@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.po.Admin;
 import webcurriculumdesign.backend.data.po.User;
-import webcurriculumdesign.backend.data.pojo.CurrentUser;
+import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.UserService;
 

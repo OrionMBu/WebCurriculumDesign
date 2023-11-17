@@ -1,4 +1,4 @@
-package webcurriculumdesign.backend.data.enums;
+package webcurriculumdesign.backend.data.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

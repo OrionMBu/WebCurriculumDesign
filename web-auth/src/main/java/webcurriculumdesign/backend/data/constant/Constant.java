@@ -1,4 +1,4 @@
-package webcurriculumdesign.backend.data.pojo;
+package webcurriculumdesign.backend.data.constant;
 
 /**
  * 常量表

@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import webcurriculumdesign.backend.data.pojo.MailTemplate;
+import webcurriculumdesign.backend.data.constant.MailTemplate;
 
 @Service
 public class MailService {

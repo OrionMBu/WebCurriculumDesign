@@ -1,6 +1,6 @@
 package webcurriculumdesign.backend.util;
 
-import webcurriculumdesign.backend.data.pojo.Constant;
+import webcurriculumdesign.backend.data.constant.Constant;
 
 import java.util.Random;
 

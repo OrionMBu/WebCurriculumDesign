@@ -8,10 +8,10 @@ import org.apache.catalina.connector.Response;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
-import webcurriculumdesign.backend.data.enums.Role;
-import webcurriculumdesign.backend.data.enums.TokenType;
-import webcurriculumdesign.backend.data.pojo.Constant;
-import webcurriculumdesign.backend.data.pojo.CurrentUser;
+import webcurriculumdesign.backend.data.constant.Role;
+import webcurriculumdesign.backend.data.constant.TokenType;
+import webcurriculumdesign.backend.data.constant.Constant;
+import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.util.JWTUtil;
 
 import javax.naming.AuthenticationException;
