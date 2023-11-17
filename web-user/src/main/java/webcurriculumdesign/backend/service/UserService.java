@@ -9,9 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.dto.FileToUpload;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.Audit;
+import webcurriculumdesign.backend.data.po.BaseInfo;
 import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
+import webcurriculumdesign.backend.mapper.AcademyMapper;
 import webcurriculumdesign.backend.mapper.AuditMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
 
@@ -19,7 +21,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-public class UserService<T> {
+public class UserService<T extends BaseInfo> {
     @Resource
     UserMapper userMapper;
     @Resource
@@ -30,6 +32,8 @@ public class UserService<T> {
     StudentService studentService;
     @Resource
     TeacherService teacherService;
+    @Resource
+    AcademyMapper academyMapper;
     @Resource
     AuditMapper auditMapper;
 
@@ -167,9 +171,19 @@ public class UserService<T> {
     }
 
     // 更新个人信息
-    public void updateUserInfo(T user, BaseMapper<T> mapper, Integer userId) {
+    public void updateUserInfo(T user, BaseMapper<T> mapper, Integer userId) throws Exception {
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("user_id", userId);
+
+        String academyName = user.getAcademy();
+        if (!academyName.isEmpty()) {
+            Integer academyId = academyMapper.getIdByName(academyName);
+            if (academyId != null) {
+                updateWrapper.set("academy_id", academyId);
+            } else {
+                throw new Exception("学院错误");
+            }
+        }
         mapper.update(user, updateWrapper);
     }
 
