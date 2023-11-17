@@ -25,7 +25,7 @@ public class UserController {
      * @param file 新头像
      */
     @RequiredLogin(roles = "ALL")
-    @PostMapping("/changeProfile")
+    @PatchMapping("/changeProfile")
     public Result changeProfile(@RequestParam("fileToUpload") MultipartFile file) {
         return userService.changeProfile(file);
     }
@@ -68,7 +68,7 @@ public class UserController {
      * @param data 用户信息
      */
     @RequiredLogin
-    @PostMapping("/updateAppointedUser")
+    @PatchMapping("/updateAppointedUser")
     public Result updateAppointedUser(@RequestBody Map<String, Object> data) {
         return userService.updateAppointedUser(data);
     }

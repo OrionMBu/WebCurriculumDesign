@@ -23,7 +23,7 @@ public class BaseController {
      * @param newPassword 新密码
      */
     @RequiredLogin(roles = "ALL")
-    @PostMapping("/updatePassword")
+    @PatchMapping("/updatePassword")
     public Result updatePassword(@RequestParam String previousPassword, @RequestParam String newPassword) {
         return baseService.updatePassword(previousPassword, newPassword);
     }
@@ -33,7 +33,7 @@ public class BaseController {
      *
      */
     @RequiredLogin(roles = "ALL")
-    @PostMapping("/getMainMenu")
+    @GetMapping("/getMainMenu")
     public Result getMainMenu() {
         return baseService.getMainMenu();
     }

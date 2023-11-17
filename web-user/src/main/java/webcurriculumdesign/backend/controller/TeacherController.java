@@ -1,10 +1,7 @@
 package webcurriculumdesign.backend.controller;
 
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.po.Teacher;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
@@ -23,7 +20,7 @@ public class TeacherController {
      * @param teacher 待更新信息
      */
     @RequiredLogin(roles = "TEACHER")
-    @PostMapping("/updateTeacherInfo")
+    @PatchMapping("/updateTeacherInfo")
     public Result updateTeacherInfo(@RequestBody Teacher teacher) {
         return teacherService.updateTeacherInfo(teacher, CurrentUser.id);
     }

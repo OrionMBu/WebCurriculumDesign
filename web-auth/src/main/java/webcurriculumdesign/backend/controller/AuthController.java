@@ -60,7 +60,7 @@ public class AuthController {
      * @param userMail 用户邮箱
      * @param newPassword 新密码
      */
-    @PostMapping("updatePassword")
+    @PatchMapping("updatePassword")
     public Result updatePassword(@RequestParam String verificationCode, @RequestParam String userMail, @RequestParam String newPassword) {
         return authService.updatePassword(verificationCode, userMail, newPassword);
     }
@@ -70,7 +70,7 @@ public class AuthController {
      *
      * @param refreshToken refreshToken
      */
-    @PostMapping("/refresh")
+    @PatchMapping("/refresh")
     public Result refresh(@RequestParam String refreshToken) {
         return authService.refresh(refreshToken);
     }
