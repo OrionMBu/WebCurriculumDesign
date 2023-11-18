@@ -32,11 +32,6 @@ public class User {
     private String password;
 
     /*
-    用户昵称
-     */
-    private String name;
-
-    /*
     用户权限
      */
     private String role;
