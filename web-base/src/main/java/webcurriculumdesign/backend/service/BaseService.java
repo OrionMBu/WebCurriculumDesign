@@ -1,10 +1,12 @@
 package webcurriculumdesign.backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import webcurriculumdesign.backend.cache.IGlobalCache;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
@@ -29,18 +31,16 @@ import java.util.List;
 public class BaseService {
     @Resource
     MainMenuMapper mainMenuMapper;
-
     @Resource
     UserMapper userMapper;
-
     @Resource
     NewsMapper newsMapper;
-
     @Resource
     StaticValueDao staticValueDao;
-
     @Resource
     UserService userService;
+    @Resource
+    IGlobalCache iGlobalCache;
 
     // 更新用户密码
     public Result updatePassword(String previousPassword, String newPassword) {
@@ -66,6 +66,28 @@ public class BaseService {
         }
 
         return Result.success(null);
+    }
+
+    public Result updateMail(String newMail, String mailVerificationCode) {
+        // 判断邮箱是否被注册
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", newMail);
+        User user = userMapper.selectOne(queryWrapper);
+        if (user != null) return Result.error(Response.SC_BAD_REQUEST, "邮箱已被注册");
+
+        // 校验邮件验证码
+        String redisIKey = "MailVerificationCode-" + newMail;
+        String trueCode = (String) iGlobalCache.get(redisIKey);
+        if (trueCode == null || !trueCode.equals(mailVerificationCode)) return Result.error(Response.SC_UNAUTHORIZED, "验证码有误");
+
+        // 更新邮箱
+        User newUser = new User();
+        newUser.setMail(newMail);
+        try {
+            userMapper.update(newUser, null);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     // 获取主目录

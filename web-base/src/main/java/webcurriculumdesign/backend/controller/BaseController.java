@@ -29,6 +29,18 @@ public class BaseController {
     }
 
     /**
+     * 更新用户邮箱
+     *
+     * @param newMail 新邮箱
+     * @param mailVerificationCode 邮箱验证码
+     */
+    @RequiredLogin(roles = "ALL")
+    @PatchMapping("/updateMail")
+    public Result updateMail(@RequestParam String newMail, @RequestParam String mailVerificationCode) {
+        return baseService.updateMail(newMail, mailVerificationCode);
+    }
+
+    /**
      * 获取主目录
      *
      */
