@@ -57,7 +57,7 @@ public class AuthService {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         // 判断用户权限
-        User user = new User(null, userMail, hashedPassword, userMail, null, "");
+        User user = new User(null, userMail, hashedPassword, null, "");
         switch (signUpRole) {
             case "0" -> user.setRole(Role.ADMIN.role);
             case "1" -> user.setRole(Role.TEACHER.role);
@@ -129,17 +129,16 @@ public class AuthService {
 
         // 生成accessToken和refreshToken
         try{
-            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getNickName(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
+            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
             iGlobalCache.set(user.getMail(), refreshToken, Constant.REFRESH_EXPIRE_TIME);
 
-            String accessToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getNickName(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
+            String accessToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
 
             Map<String, Object> map = new HashMap<>();
             map.put("accessToken", accessToken);
             map.put("refreshToken", refreshToken);
             map.put("role", user.getRole());
             map.put("profile", user.getProfile());
-            map.put("name", user.getNickName());
             map.put("mail", user.getMail());
 
             return Result.success(map);
@@ -186,20 +185,19 @@ public class AuthService {
             if (!tokenType.equals(TokenType.REFRESH.type)) return Result.error(Response.SC_UNAUTHORIZED, "验证错误");
 
             String id = info.getClaim("id").asString();
-            String userName = info.getClaim("user_name").asString();
             String userMail = info.getClaim("user_mail").asString();
             String role = info.getClaim("role").asString();
 
             // 生成新token
             if (Objects.equals(refreshToken, iGlobalCache.get(userMail))) {
-                String newAccessToken = JWTUtil.getTokenWithPayLoad(id, userMail, userName, role, Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
+                String newAccessToken = JWTUtil.getTokenWithPayLoad(id, userMail, role, Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
                 Map<String, String> map = new HashMap<>();
                 map.put("accessToken", newAccessToken);
 
                 // 判断refreshToken时效
                 long timeLeft = iGlobalCache.getExpire(userMail);
                 if (timeLeft <= Constant.REFRESH_BOUND) {
-                    String newRefreshToken = JWTUtil.getTokenWithPayLoad(id, userMail, userName, role, Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
+                    String newRefreshToken = JWTUtil.getTokenWithPayLoad(id, userMail, role, Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
                     iGlobalCache.set(userMail, newRefreshToken, Constant.REFRESH_EXPIRE_TIME);
                     map.put("refreshToken", newRefreshToken);
                 }
