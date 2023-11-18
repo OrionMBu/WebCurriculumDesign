@@ -68,6 +68,7 @@ public class BaseService {
         return Result.success(null);
     }
 
+    // 更新邮箱
     public Result updateMail(String newMail, String mailVerificationCode) {
         // 判断邮箱是否被注册
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", newMail);
