@@ -43,14 +43,14 @@ public class AuthController {
     }
 
     /**
-     * 通过邮箱（userMail）或昵称(userName)登录
+     * 通过邮箱登录
      *
-     * @param account 邮箱或昵称
+     * @param userMail 邮箱
      * @param password 密码
      */
     @PostMapping("/login")
-    public Result login(@RequestParam String account, String password) {
-        return authService.login(account, password);
+    public Result login(@RequestParam String userMail, String password) {
+        return authService.login(userMail, password);
     }
 
     /**
