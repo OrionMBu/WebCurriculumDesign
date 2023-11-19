@@ -37,11 +37,6 @@ public class UserService<T extends BaseInfo> {
     @Resource
     AuditMapper auditMapper;
 
-    // 邮箱或昵称获取用户
-    public User getUser(String account) {
-        return userMapper.getUser(account);
-    }
-
     // 修改头像
     public Result changeProfile(MultipartFile file) {
         // 判断是否为图片
@@ -116,19 +111,19 @@ public class UserService<T extends BaseInfo> {
     }
 
     // 获取用户信息
-    public Result getUserInfo(String userId) {
+    public BaseInfo getUserInfo(String userId) {
         User user = userMapper.selectById(userId);
         return switch (user.getRole()) {
             case "TEACHER" -> teacherService.getTeacherInfoByUserId(userId);
             case "STUDENT" -> studentService.getStudentInfoByUserId(userId);
             case "ADMIN" -> {
                 if (!CurrentUser.role.equals(Role.ADMIN.role)) {
-                    yield Result.success(null);
+                    yield  new BaseInfo();
                 } else {
                     yield adminService.getAdminInfoByUserId(userId);
                 }
             }
-            default -> Result.success(null);
+            default -> new BaseInfo();
         };
     }
 
@@ -161,15 +156,6 @@ public class UserService<T extends BaseInfo> {
         return Result.success(resultList);
     }
 
-    // 插入信息（初始化）
-    public void insertInfo(Integer userId, Integer role) {
-        switch (role) {
-            case 0 -> adminService.insertAdminInfo(userId);
-            case 1 -> teacherService.insertTeacherInfo(userId);
-            default -> studentService.insertStudentInfo(userId);
-        }
-    }
-
     // 更新个人信息
     public void updateUserInfo(T user, BaseMapper<T> mapper, Integer userId) throws Exception {
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
@@ -187,6 +173,7 @@ public class UserService<T extends BaseInfo> {
         mapper.update(user, updateWrapper);
     }
 
+    // 更新指定用户信息
     public Result updateAppointedUser(Map<String, Object> data) {
         Integer userId = (Integer) data.get("id");
         data.remove("id");
@@ -203,4 +190,21 @@ public class UserService<T extends BaseInfo> {
         }
         return Result.ok();
     }
+
+
+
+    // 邮箱或昵称获取用户
+    public User getUser(String account) {
+        return userMapper.getUser(account);
+    }
+
+    // 插入信息（初始化）
+    public void insertInfo(Integer userId, Integer role) {
+        switch (role) {
+            case 0 -> adminService.insertAdminInfo(userId);
+            case 1 -> teacherService.insertTeacherInfo(userId);
+            default -> studentService.insertStudentInfo(userId);
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package webcurriculumdesign.backend.data.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,12 @@ public class User {
     用户密码
      */
     private String password;
+
+    /*
+    真实姓名
+     */
+    @TableField(exist = false)
+    private String name;
 
     /*
     用户权限

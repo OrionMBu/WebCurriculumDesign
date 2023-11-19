@@ -57,7 +57,7 @@ public class AuthService {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         // 判断用户权限
-        User user = new User(null, userMail, hashedPassword, null, "");
+        User user = new User(null, userMail, hashedPassword, null, null, "");
         switch (signUpRole) {
             case "0" -> user.setRole(Role.ADMIN.role);
             case "1" -> user.setRole(Role.TEACHER.role);
@@ -117,11 +117,10 @@ public class AuthService {
         return Result.ok();
     }
 
-    // 通过邮箱或昵称登录
+    // 通过邮箱登录
     public Result login(String userMail, String password) {
         // 查询用户是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("mail", userMail);
-        User user = userMapper.selectOne(queryWrapper);
+        User user = userMapper.getUserByMail(userMail);
         if (user == null) return Result.error(Response.SC_BAD_REQUEST, "用户不存在");
 
         // 判断密码是否正确
@@ -140,6 +139,7 @@ public class AuthService {
             map.put("role", user.getRole());
             map.put("profile", user.getProfile());
             map.put("mail", user.getMail());
+            map.put("name", userService.getUserName(user.getId().toString()));
 
             return Result.success(map);
         } catch (Exception e){

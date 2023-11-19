@@ -4,7 +4,6 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import webcurriculumdesign.backend.data.po.Admin;
-import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.AdminMapper;
 import webcurriculumdesign.backend.util.MapUtil;
 
@@ -20,8 +19,8 @@ public class AdminService {
     MapUtil<Admin> mapUtil;
 
     // 获取管理员信息
-    public Result getAdminInfoByUserId(String userId) {
-        return Result.success(adminMapper.getAdminByUserId(userId));
+    public Admin getAdminInfoByUserId(String userId) {
+        return adminMapper.getAdminByUserId(userId);
     }
 
     // 插入学生信息（初始化）

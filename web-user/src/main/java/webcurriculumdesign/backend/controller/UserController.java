@@ -49,7 +49,7 @@ public class UserController {
     @RequiredLogin(roles = "ALL")
     @GetMapping("/getUserInfo")
     public Result getUserInfo(@RequestParam(required = false) String userId) {
-        return userService.getUserInfo(userId == null ? String.valueOf(CurrentUser.id) : userId);
+        return Result.success(userService.getUserInfo(userId == null ? String.valueOf(CurrentUser.id) : userId));
     }
 
     /**
@@ -76,6 +76,7 @@ public class UserController {
 
     //----------------------内部微服务接口----------------------//
 
+
     /**
      * 通过邮箱或用户名获取用户信息
      *
@@ -96,5 +97,16 @@ public class UserController {
     @PostMapping("/insertInfo")
     public void insertInfo(@RequestParam Integer userId, @RequestParam Integer role) {
         userService.insertInfo(userId, role);
+    }
+
+    /**
+     * 通过用户id获取用户名
+     *
+     * @param userId 用户id
+     * @return userName 用户真实姓名
+     */
+    @GetMapping("/getUserName/{userId}")
+    public String getUserName(@PathVariable("userId") String userId) {
+        return userService.getUserInfo(userId).getName();
     }
 }

@@ -21,8 +21,8 @@ public class TeacherService {
     MapUtil<Teacher> mapUtil;
 
     // 获取教师信息
-    public Result getTeacherInfoByUserId(String userId) {
-        return Result.success(teacherMapper.getTeacherByUserId(userId));
+    public Teacher getTeacherInfoByUserId(String userId) {
+        return teacherMapper.getTeacherByUserId(userId);
     }
 
     // 插入教师信息（初始化）

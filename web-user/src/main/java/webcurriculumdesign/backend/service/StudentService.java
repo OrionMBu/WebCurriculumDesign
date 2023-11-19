@@ -21,8 +21,8 @@ public class StudentService {
     MapUtil<Student> mapUtil;
 
     // 获取学生信息
-    public Result getStudentInfoByUserId(String userId) {
-        return Result.success(studentMapper.getStudentByUserId(userId));
+    public Student getStudentInfoByUserId(String userId) {
+        return studentMapper.getStudentByUserId(userId);
     }
 
     // 插入学生信息（初始化）
