@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "webcurriculumdesign.backend.service")
 @SpringBootApplication
-@MapperScan("webcurriculumdesign.backend")
+@MapperScan({"webcurriculumdesign.backend.mapper", "webcurriculumdesign.backend.data.dao"})
 public class WebAuthApplication {
 
 	public static void main(String[] args) {

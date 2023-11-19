@@ -12,9 +12,9 @@ public interface UserService {
     // 插入用户信息
     @Transactional
     @PostMapping("/insertInfo")
-    void insertInfo(@RequestParam Integer userId, @RequestParam Integer role);
+    void insertInfo(@RequestParam("userId") Integer userId, @RequestParam("role") Integer role);
 
     // 通过用户id和身份获取用户名
     @GetMapping("/getUserName/{userId}")
-    String getUserName(@PathVariable("userId") String userId);
+    String getUserName(@PathVariable("userId") Integer userId);
 }

@@ -106,7 +106,7 @@ public class UserController {
      * @return userName 用户真实姓名
      */
     @GetMapping("/getUserName/{userId}")
-    public String getUserName(@PathVariable("userId") String userId) {
-        return userService.getUserInfo(userId).getName();
+    public String getUserName(@PathVariable("userId") Integer userId) {
+        return userService.getUserInfo(String.valueOf(userId)).getName();
     }
 }
