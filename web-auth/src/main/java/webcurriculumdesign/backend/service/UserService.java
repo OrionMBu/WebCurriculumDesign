@@ -15,6 +15,6 @@ public interface UserService {
     void insertInfo(@RequestParam Integer userId, @RequestParam Integer role);
 
     // 通过用户id和身份获取用户名
-    @GetMapping("/getUserName/{userId}/{role}")
+    @GetMapping("/getUserName/{userId}")
     String getUserName(@PathVariable("userId") String userId);
 }
