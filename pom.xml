@@ -14,6 +14,7 @@
 		<module>web-user</module>
 		<module>web-gateway</module>
 		<module>web-platform</module>
+		<module>web-course</module>
 	</modules>
 
 	<packaging>pom</packaging>
