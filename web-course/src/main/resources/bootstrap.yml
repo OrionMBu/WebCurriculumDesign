@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: web-course
+  profiles:
+    active: prod
+  main:
+    allow-circular-references: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: eternalavalon.top:8848
+        username: nacos
+        password: 0nlinNacos
+        group: WebTeam
+      config:
+        server-addr: eternalavalon.top:8848
+        username: nacos
+        password: 0nlinNacos
+        file-extension: yaml
+        group: WebTeam
+        extension-configs:
+          - data-id: web.yaml
+            group: WebTeam
+            refresh: true
+logging:
+  level:
+    com.baomidou.mybatisplus: debug
