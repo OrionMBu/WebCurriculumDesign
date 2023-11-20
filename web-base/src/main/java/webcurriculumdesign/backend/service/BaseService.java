@@ -39,7 +39,7 @@ public class BaseService {
     StaticValueDao staticValueDao;
     @Resource
     UserService userService;
-    @Resource
+    @Resource(name = "cache")
     IGlobalCache iGlobalCache;
 
     // 更新用户密码
