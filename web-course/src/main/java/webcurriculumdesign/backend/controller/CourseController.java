@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.CourseService;
 
@@ -13,6 +14,16 @@ import webcurriculumdesign.backend.service.CourseService;
 public class CourseController {
     @Resource
     CourseService courseService;
+
+    /**
+     * 查询课表
+     *
+     */
+    @RequiredLogin(roles = "ALL")
+    @GetMapping("/getCourseList")
+    public Result getCourseList() {
+        return courseService.getCourseList();
+    }
 
     /**
      * 查询课程
@@ -24,13 +35,13 @@ public class CourseController {
      * @param teacherName 授课教师
      * @param type 课程类型（0 -> 必修，1 -> 限选，2 -> 选修，3 -> 全部）
      */
-    @GetMapping("/getCourseList")
-    public Result getCourseList(@RequestParam(required = false, defaultValue = "1") int page,
+    @GetMapping("/searchCourse")
+    public Result searchCourse(@RequestParam(required = false, defaultValue = "1") int page,
                                 @RequestParam(required = false, defaultValue = "20") int pageSize,
                                 @RequestParam(required = false, defaultValue = "") String courseName,
                                 @RequestParam(required = false, defaultValue = "") String index,
                                 @RequestParam(required = false, defaultValue = "") String teacherName,
                                 @RequestParam(required = false, defaultValue = "3") int type) {
-        return courseService.getCourseList(page, pageSize, courseName, index, teacherName, type);
+        return courseService.searchCourse(page, pageSize, courseName, index, teacherName, type);
     }
 }
