@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    @Select("SELECT * FROM info_user WHERE mail=#{account} OR nick_name=#{account}")
+    @Select("SELECT * FROM info_user WHERE mail=#{account}")
     User getUser(String account);
 
     @Select("SELECT * FROM info_user")
