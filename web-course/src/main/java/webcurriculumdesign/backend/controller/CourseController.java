@@ -1,10 +1,7 @@
 package webcurriculumdesign.backend.controller;
 
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.CourseService;
@@ -43,5 +40,16 @@ public class CourseController {
                                 @RequestParam(required = false, defaultValue = "") String teacherName,
                                 @RequestParam(required = false, defaultValue = "3") int type) {
         return courseService.searchCourse(page, pageSize, courseName, index, teacherName, type);
+    }
+
+    /**
+     * 选课（教师学生通用）
+     *
+     * @param courseId 课程id
+     */
+    @RequiredLogin(roles = "ALL")
+    @PostMapping("/selectCourse")
+    public Result selectCourse(@RequestParam int courseId) {
+        return courseService.selectCourse(courseId);
     }
 }

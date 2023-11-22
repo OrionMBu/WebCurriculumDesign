@@ -67,4 +67,14 @@ public interface CourseMapper extends BaseMapper<Course> {
             "JOIN info_academy ON info_academy.id = course.academy_id " +
             "WHERE course_student.user_id = #{userId}")
     List<Course> getStudentCourse(Integer userId);
+
+    /**
+     * 插入选课信息
+     *
+     * @param tableName 目标表，区分教师和学生
+     * @param courseId 课程id
+     * @param userId 用户id
+     */
+    @Insert("INSERT INTO ${tableName}(course_id, user_id) VALUES (#{courseId}, #{userId})")
+    void insertCourseData(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
 }

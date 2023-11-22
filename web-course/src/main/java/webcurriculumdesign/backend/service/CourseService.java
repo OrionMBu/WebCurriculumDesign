@@ -1,6 +1,7 @@
 package webcurriculumdesign.backend.service;
 
 import jakarta.annotation.Resource;
+import org.apache.catalina.connector.Response;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
@@ -54,5 +55,18 @@ public class CourseService {
         courseUtil.fillCourseData(courseList);
 
         return Result.success(courseList);
+    }
+
+    // 选课
+    public Result selectCourse(int courseId) {
+        try {
+            switch (CurrentUser.role) {
+                case "TEACHER" -> courseMapper.insertCourseData("course_teacher", courseId, CurrentUser.id);
+                case "STUDENT" -> courseMapper.insertCourseData("course_student", courseId, CurrentUser.id);
+            }
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }
