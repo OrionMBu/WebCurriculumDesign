@@ -100,13 +100,12 @@ public class UserController {
     }
 
     /**
-     * 通过用户id获取用户名
+     * 通过用户id获取用户信息
      *
      * @param userId 用户id
-     * @return userName 用户真实姓名
      */
-    @GetMapping("/getUserName/{userId}")
-    public String getUserName(@PathVariable("userId") Integer userId) {
-        return userService.getUserInfo(String.valueOf(userId)).getName();
+    @GetMapping("/getUserData/{userId}")
+    public Map<String, Object> getUserData(@PathVariable("userId") Integer userId) throws IllegalAccessException {
+        return userService.getUserData(userId);
     }
 }

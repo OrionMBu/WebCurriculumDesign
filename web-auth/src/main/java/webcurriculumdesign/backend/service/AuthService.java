@@ -139,7 +139,7 @@ public class AuthService {
             map.put("role", user.getRole());
             map.put("profile", user.getProfile());
             map.put("mail", user.getMail());
-            map.put("name", userService.getUserName(user.getId()));
+            map.put("name", userService.getUserData(user.getId()).get("name"));
 
             return Result.success(map);
         } catch (Exception e){

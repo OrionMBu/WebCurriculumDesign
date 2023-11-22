@@ -16,6 +16,7 @@ import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.AcademyMapper;
 import webcurriculumdesign.backend.mapper.AuditMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
+import webcurriculumdesign.backend.util.MapUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -196,6 +197,14 @@ public class UserService<T extends BaseInfo> {
     // 邮箱或昵称获取用户
     public User getUser(String account) {
         return userMapper.getUser(account);
+    }
+
+    // 通过用户id获取用户信息
+    public Map<String, Object> getUserData(int userId) throws IllegalAccessException {
+        Map<String, Object> userData = MapUtil.convertObjectToMap(getUserInfo(String.valueOf(userId)));
+        Map<String, Object> userBaseData = MapUtil.convertObjectToMap(userMapper.selectById(userId));
+        userData.putAll(userBaseData);
+        return userData;
     }
 
     // 插入信息（初始化）
