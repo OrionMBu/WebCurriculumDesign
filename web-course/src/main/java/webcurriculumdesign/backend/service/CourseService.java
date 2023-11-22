@@ -5,6 +5,7 @@ import org.apache.catalina.connector.Response;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
+import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.Course;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.CourseMapper;
@@ -14,6 +15,8 @@ import java.util.*;
 
 @Service
 public class CourseService {
+    @Resource
+    UserService userService;
     @Resource
     CourseMapper courseMapper;
     @Resource
@@ -58,7 +61,21 @@ public class CourseService {
     }
 
     // 选课
-    public Result selectCourse(int courseId) {
+    public Result selectCourse(int courseId, int userId) {
+        // 管理员操作
+        if (userId != 0 && CurrentUser.role.equals(Role.ADMIN.role)) {
+            Map<String, Object> userData;
+            try {
+                userData = userService.getUserData(userId);
+            } catch (Exception e) {
+                return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+            }
+
+            CurrentUser.role = (String) userData.get("role");
+            CurrentUser.id = (Integer) userData.get("id");
+        }
+
+        // 插入数据
         try {
             switch (CurrentUser.role) {
                 case "TEACHER" -> courseMapper.insertCourseData("course_teacher", courseId, CurrentUser.id);

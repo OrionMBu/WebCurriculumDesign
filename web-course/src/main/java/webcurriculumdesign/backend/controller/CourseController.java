@@ -49,7 +49,7 @@ public class CourseController {
      */
     @RequiredLogin(roles = "ALL")
     @PostMapping("/selectCourse")
-    public Result selectCourse(@RequestParam int courseId) {
-        return courseService.selectCourse(courseId);
+    public Result selectCourse(@RequestParam int courseId, @RequestParam(required = false, defaultValue = "0") int userId) {
+        return courseService.selectCourse(courseId, userId);
     }
 }
