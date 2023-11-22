@@ -201,7 +201,17 @@ public class UserService<T extends BaseInfo> {
 
     // 通过用户id获取用户信息
     public Map<String, Object> getUserData(int userId) throws IllegalAccessException {
-        Map<String, Object> userData = MapUtil.convertObjectToMap(getUserInfo(String.valueOf(userId)));
+        // 获取用户信息
+        User user = userMapper.selectById(userId);
+        BaseInfo userInfo = switch (user.getRole()) {
+            case "TEACHER" -> teacherService.getTeacherInfoByUserId(String.valueOf(userId));
+            case "STUDENT" -> studentService.getStudentInfoByUserId(String.valueOf(userId));
+            case "ADMIN" -> adminService.getAdminInfoByUserId(String.valueOf(userId));
+            default -> new BaseInfo();
+        };
+
+        // 处理数据
+        Map<String, Object> userData = MapUtil.convertObjectToMap(userInfo);
         Map<String, Object> userBaseData = MapUtil.convertObjectToMap(userMapper.selectById(userId));
         userData.putAll(userBaseData);
         return userData;
