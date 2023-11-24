@@ -163,7 +163,7 @@ public class UserService<T extends BaseInfo> {
         updateWrapper.eq("user_id", userId);
 
         String academyName = user.getAcademy();
-        if (!academyName.isEmpty()) {
+        if (academyName != null && !academyName.isEmpty()) {
             Integer academyId = academyMapper.getIdByName(academyName);
             if (academyId != null) {
                 updateWrapper.set("academy_id", academyId);
