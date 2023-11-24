@@ -43,14 +43,15 @@ public class MapUtil<T> {
     public static Map<String, Object> convertObjectToMap(Object obj) throws IllegalAccessException {
         Map<String, Object> result = new HashMap<>();
 
-        // 获取对象的所有字段
-        Field[] fields = obj.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-            field.setAccessible(true); // 设置字段可访问
-
-            // 将字段名和字段值放入 Map
-            result.put(field.getName(), field.get(obj));
+        // 获取对象的所有字段，包括父类的字段
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true); // 设置字段可访问
+                result.put(field.getName(), field.get(obj));
+            }
+            clazz = clazz.getSuperclass(); // 获取父类的 Class 对象
         }
 
         return result;
