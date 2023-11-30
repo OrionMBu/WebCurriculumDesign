@@ -82,8 +82,8 @@ public class CourseService {
 
             // 插入/删除数据
             switch (mode) {
-                case 1 -> courseMapper.insertCourseBinding(tableName, courseId, userId);
-                case 2 -> courseMapper.deleteCourseBinding(tableName, courseId, userId);
+                case 1 -> courseMapper.insertCourseBinding(tableName, courseId, CurrentUser.id);
+                case 2 -> courseMapper.deleteCourseBinding(tableName, courseId, CurrentUser.id);
             }
             return Result.ok();
         } catch (Exception e) {
