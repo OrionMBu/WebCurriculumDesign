@@ -46,10 +46,23 @@ public class CourseController {
      * 选课（教师学生通用）
      *
      * @param courseId 课程id
+     * @param userId 用户id（可选，需要管理员权限）
      */
     @RequiredLogin(roles = "ALL")
     @PostMapping("/selectCourse")
     public Result selectCourse(@RequestParam int courseId, @RequestParam(required = false, defaultValue = "0") int userId) {
-        return courseService.selectCourse(courseId, userId);
+        return courseService.courseSelection(courseId, userId, 1);
+    }
+
+    /**
+     * 退课（教师学生通用）
+     *
+     * @param courseId 课程id
+     * @param userId 用户id（可选，需要管理员权限）
+     */
+    @RequiredLogin(roles = "ALL")
+    @PatchMapping("/dropCourse")
+    public Result dropCourse(@RequestParam int courseId, @RequestParam(required = false, defaultValue = "0") int userId) {
+        return courseService.courseSelection(courseId, userId, 2);
     }
 }

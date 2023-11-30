@@ -10,6 +10,7 @@ import webcurriculumdesign.backend.data.po.Course;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.CourseMapper;
 import webcurriculumdesign.backend.util.CourseUtil;
+import webcurriculumdesign.backend.util.UserUtil;
 
 import java.util.*;
 
@@ -60,8 +61,8 @@ public class CourseService {
         return Result.success(courseList);
     }
 
-    // 选课
-    public Result selectCourse(int courseId, int userId) {
+    // 选/退课（1 -> 选课，2 -> 退课）
+    public Result courseSelection(int courseId, int userId, int mode) {
         // 管理员操作
         if (userId != 0 && CurrentUser.role.equals(Role.ADMIN.role)) {
             Map<String, Object> userData;
@@ -75,11 +76,14 @@ public class CourseService {
             CurrentUser.id = (Integer) userData.get("id");
         }
 
-        // 插入数据
         try {
-            switch (CurrentUser.role) {
-                case "TEACHER" -> courseMapper.insertCourseData("course_teacher", courseId, CurrentUser.id);
-                case "STUDENT" -> courseMapper.insertCourseData("course_student", courseId, CurrentUser.id);
+            // 获取表名
+            String tableName = UserUtil.getTableName();
+
+            // 插入/删除数据
+            switch (mode) {
+                case 1 -> courseMapper.insertCourseBinding(tableName, courseId, userId);
+                case 2 -> courseMapper.deleteCourseBinding(tableName, courseId, userId);
             }
             return Result.ok();
         } catch (Exception e) {

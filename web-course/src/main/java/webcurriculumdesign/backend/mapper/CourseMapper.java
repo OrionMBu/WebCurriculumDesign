@@ -76,5 +76,8 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @param userId 用户id
      */
     @Insert("INSERT INTO ${tableName}(course_id, user_id) VALUES (#{courseId}, #{userId})")
-    void insertCourseData(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
+    void insertCourseBinding(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
+
+    @Delete("DELETE FROM ${tableName} WHERE course_id = #{courseId} AND user_id = #{userId}")
+    void deleteCourseBinding(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
 }
