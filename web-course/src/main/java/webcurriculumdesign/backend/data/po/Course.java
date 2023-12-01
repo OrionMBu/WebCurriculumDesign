@@ -62,27 +62,14 @@ public class Course {
     @TableField(exist = false)
     private List<CourseTimeDto> courseTimeList;
 
-//    /*
-//    上课周
-//     */
-//    @TableField(exist = false)
-//    private String week;
-//
-//    /*
-//    上课星期
-//     */
-//    @TableField(exist = false)
-//    private int weekday;
-//
-//    /*
-//    上课节次
-//     */
-//    @TableField(exist = false)
-//    private int order;
-
     /*
     授课教师
      */
     @TableField(exist = false)
     private List<String> teacher;
+
+    /*
+    备注
+     */
+    private String comment;
 }
