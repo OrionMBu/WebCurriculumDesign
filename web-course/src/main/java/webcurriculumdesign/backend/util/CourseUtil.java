@@ -1,16 +1,22 @@
 package webcurriculumdesign.backend.util;
 
 import jakarta.annotation.Resource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import webcurriculumdesign.backend.data.dao.CourseTeacherDao;
 import webcurriculumdesign.backend.data.dto.CourseTimeDto;
+import webcurriculumdesign.backend.data.dto.ScoreDto;
 import webcurriculumdesign.backend.data.po.Course;
+import webcurriculumdesign.backend.mapper.CourseMapper;
 import webcurriculumdesign.backend.mapper.CourseTimeMapper;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Service
 public class CourseUtil {
+    @Resource
+    CourseMapper courseMapper;
     @Resource
     CourseTimeMapper courseTimeMapper;
     @Resource
@@ -60,5 +66,36 @@ public class CourseUtil {
             courseTeacherMap.computeIfAbsent(courseId, x -> new ArrayList<>()).add(teacher_name);
         }
         return courseTeacherMap;
+    }
+
+    /**
+     * 异步更新学生GPA
+     *
+     * @param userId 用户id
+     */
+    @Async
+    public void updateStudentGPA(Integer userId) {
+        // 获取学生全部课程
+        List<ScoreDto> scoreDtoList = courseMapper.getScoreListByUserId(userId);
+
+        double divided = 0;
+        double divisor = 0;
+        for (ScoreDto scoreDto : scoreDtoList) {
+            // 排除未评完分的科目
+            if (scoreDto.getRegular() == -1 || scoreDto.getFinalScore() == -1) continue;
+            double point = scoreDto.getPoint();
+            double credit = scoreDto.getCredit();
+            divided += (point * credit);
+            divisor += credit;
+        }
+        // 计算加权平均数
+        double GPA = divided / divisor;
+
+        // 四舍五入
+        DecimalFormat decimalFormat = new DecimalFormat("#.0");
+        double formattedGPA = Double.parseDouble(decimalFormat.format(GPA));
+
+        // 更新学生GPA
+        courseMapper.updateStudentGPA(userId, formattedGPA);
     }
 }

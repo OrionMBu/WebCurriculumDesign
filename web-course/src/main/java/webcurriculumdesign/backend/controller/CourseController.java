@@ -72,9 +72,26 @@ public class CourseController {
      * @param userId 用户id（可选，需要管理员权限）
      * @param courseId 课程id（可选，带此参数则查询指定课程）
      */
-    @RequiredLogin(roles = {"STUDENT", "ADMIN"})
+    @RequiredLogin(roles = "STUDENT")
     @GetMapping("/getScore")
     public Result getScore(@RequestParam(required = false, defaultValue = "0") Integer userId, @RequestParam(required = false, defaultValue = "0") Integer courseId) {
         return courseService.getScore(userId, courseId);
+    }
+
+    /**
+     * 更新学生课程成绩，同时异步更新GPA
+     *
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @param regular 平时成绩
+     * @param finalScore 期末成绩
+     */
+    @RequiredLogin(roles = "TEACHER")
+    @PatchMapping("/updateScore")
+    public Result updateScore(@RequestParam Integer userId,
+                              @RequestParam Integer courseId,
+                              @RequestParam(required = false, defaultValue = "-1") Double regular,
+                              @RequestParam(required = false, defaultValue = "-1") Double finalScore) {
+        return courseService.updateScore(userId, courseId, regular, finalScore);
     }
 }

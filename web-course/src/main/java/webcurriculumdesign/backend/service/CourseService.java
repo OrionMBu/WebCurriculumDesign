@@ -115,4 +115,23 @@ public class CourseService {
 
         return Result.success(resultMap);
     }
+
+    // 更新学生课程成绩
+    public Result updateScore(Integer userId, Integer courseId, Double regular, Double finalScore) {
+        // 输入判断，成绩必须>=0，<=100，且不能都为-1
+        if ((regular != -1 && (regular > 100 || regular < 0)) || (finalScore != -1 && (finalScore > 100 || finalScore < 0)) || (regular == -1 && finalScore == -1)) return Result.error(Response.SC_BAD_REQUEST, "数据错误");
+
+        // 输入数据四舍五入保留一位小数
+        regular = Math.round(regular * 10.0) / 10.0;
+        finalScore = Math.round(finalScore * 10.0) / 10.0;
+
+        // 修改成绩
+        try {
+            courseMapper.updateStudentScore(userId, courseId, regular, finalScore);
+            courseUtil.updateStudentGPA(userId);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }

@@ -91,6 +91,34 @@ public interface CourseMapper extends BaseMapper<Course> {
     void deleteCourseBinding(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
 
     /**
+     * 更新学生课程成绩，regular和finalScore不能都为-1
+     * 根据权重自动更新total总成绩，保留两位小数
+     *
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @param regular 平时成绩
+     * @param finalScore 期末成绩
+     */
+    @Update("UPDATE course_student " +
+            "SET " +
+            "  regular = IF(#{regular} != -1, #{regular}, regular), " +
+            "  final_score = IF(#{finalScore} != -1, #{finalScore}, final_score), " +
+            "  total = " +
+            "  ROUND(" +
+            "  CASE " +
+            "    WHEN #{regular} != -1 AND #{finalScore} != -1 THEN " +
+            "      #{regular} * (SELECT regular_weight FROM course WHERE course.id = #{courseId}) + #{finalScore} * (SELECT final_weight FROM course WHERE course.id = #{courseId}) " +
+            "    WHEN #{regular} = -1 AND regular != -1 AND #{finalScore} != -1 THEN " +
+            "      regular * (SELECT regular_weight FROM course WHERE course.id = #{courseId}) + #{finalScore} * (SELECT final_weight FROM course WHERE course.id = #{courseId}) " +
+            "    WHEN #{finalScore} = -1 AND final_score != -1 AND #{regular} != -1 THEN " +
+            "      #{regular} * (SELECT regular_weight FROM course WHERE course.id = #{courseId}) + final_score * (SELECT final_weight FROM course WHERE course.id = #{courseId}) " +
+            "    ELSE " +
+            "      total " +
+            "  END, 2) " +
+            "WHERE user_id = #{userId} AND course_id = #{courseId}")
+    void updateStudentScore(@Param("userId") Integer userId, @Param("courseId") Integer courseId, @Param("regular") Double regular, @Param("finalScore") Double finalScore);
+
+    /**
      * 查询用户指定科目的成绩
      *
      * @param userId 用户id
