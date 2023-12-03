@@ -65,4 +65,16 @@ public class CourseController {
     public Result dropCourse(@RequestParam int courseId, @RequestParam(required = false, defaultValue = "0") int userId) {
         return courseService.courseSelection(courseId, userId, 2);
     }
+
+    /**
+     * 查询学生课程成绩信息
+     *
+     * @param userId 用户id（可选，需要管理员权限）
+     * @param courseId 课程id（可选，带此参数则查询指定课程）
+     */
+    @RequiredLogin(roles = {"STUDENT", "ADMIN"})
+    @GetMapping("/getScore")
+    public Result getScore(@RequestParam(required = false, defaultValue = "0") Integer userId, @RequestParam(required = false, defaultValue = "0") Integer courseId) {
+        return courseService.getScore(userId, courseId);
+    }
 }

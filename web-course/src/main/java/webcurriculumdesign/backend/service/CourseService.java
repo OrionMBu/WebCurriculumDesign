@@ -90,4 +90,29 @@ public class CourseService {
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    // 获取学生课程分数
+    public Result getScore(Integer userId, Integer courseId) {
+        // 指定用户模式
+        if (userId != 0) {
+            // 判断是否为管理员
+            if (!CurrentUser.role.equals(Role.ADMIN.role)) return Result.error(Response.SC_UNAUTHORIZED, "无权限");
+            else CurrentUser.id = userId;
+        }
+
+        // 结果列表
+        Map<String, Object> resultMap = new HashMap<>();
+
+        // 判断是否查询指定课程
+        if (courseId != 0) {
+            resultMap.put("score", courseMapper.getScoreByCourseId(CurrentUser.id, courseId));
+        } else {
+            resultMap.put("score", courseMapper.getScoreListByUserId(CurrentUser.id));
+        }
+
+        // 获取学生GPA和GPA排名信息
+        resultMap.put("GPA", courseMapper.getStudentGPA(CurrentUser.id));
+
+        return Result.success(resultMap);
+    }
 }

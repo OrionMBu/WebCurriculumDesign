@@ -3,9 +3,11 @@ package webcurriculumdesign.backend.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
+import webcurriculumdesign.backend.data.dto.ScoreDto;
 import webcurriculumdesign.backend.data.po.Course;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface CourseMapper extends BaseMapper<Course> {
@@ -78,6 +80,62 @@ public interface CourseMapper extends BaseMapper<Course> {
     @Insert("INSERT INTO ${tableName}(course_id, user_id) VALUES (#{courseId}, #{userId})")
     void insertCourseBinding(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
 
+    /**
+     * 删除选课信息
+     *
+     * @param tableName 目标表，区分教师和学生
+     * @param courseId 课程id
+     * @param userId 用户id
+     */
     @Delete("DELETE FROM ${tableName} WHERE course_id = #{courseId} AND user_id = #{userId}")
     void deleteCourseBinding(@Param("tableName") String tableName, @Param("courseId") Integer courseId, @Param("userId") Integer userId);
+
+    /**
+     * 查询用户指定科目的成绩
+     *
+     * @param userId 用户id
+     * @param courseId 课程id
+     */
+    @Select("SELECT `index`, name, credit, regular, final_score, total, course_id AS id, " +
+            "(SELECT COUNT(total) FROM course_student cs2 " +
+            "WHERE cs2.total > cs1.total AND cs2.course_id = cs1.course_id) + 1 AS ranking, " +
+            "IF(total >= 60, ROUND(total / 10 - 5, 1), 0) AS point " +
+            "FROM course_student cs1 " +
+            "LEFT JOIN course ON cs1.course_id = course.id " +
+            "WHERE user_id = #{userId} AND course_id = #{courseId}")
+    ScoreDto getScoreByCourseId(@Param("userId") Integer userId, @Param("courseId") Integer courseId);
+
+    /**
+     * 查询用户所有科目的成绩
+     *
+     * @param userId 用户id
+     */
+    @Select("SELECT `index`, name, credit, regular, final_score, total, course_id AS id, " +
+            "(SELECT COUNT(total) FROM course_student cs2 " +
+            "WHERE cs2.total > cs1.total AND cs2.course_id = cs1.course_id) + 1 AS ranking, " +
+            "IF(total >= 60, ROUND(total / 10 - 5, 1), 0) AS point " +
+            "FROM course_student cs1 " +
+            "LEFT JOIN course ON cs1.course_id = course.id " +
+            "WHERE user_id = #{userId}")
+    List<ScoreDto> getScoreListByUserId(@Param("userId") Integer userId);
+
+    /**
+     * 更新学生GPA
+     *
+     * @param userId 用户id
+     */
+    @Update("UPDATE info_student SET GPA = #{GPA} WHERE user_id = #{userId}")
+    void updateStudentGPA(@Param("userId") Integer userId, @Param("GPA") Double GPA);
+
+    /**
+     * 获取学生GPA和GPA排名信息
+     *
+     * @param userId 用户id
+     */
+    @Select("SELECT `GPA`, " +
+            "(SELECT COUNT(GPA) FROM info_student is2 " +
+            "WHERE is2.GPA > is1.GPA) + 1 AS ranking " +
+            "FROM info_student is1 " +
+            "WHERE user_id = #{userId}")
+    Map<String, Object> getStudentGPA(Integer userId);
 }
