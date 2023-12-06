@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-import webcurriculumdesign.backend.cache.IGlobalCache;
 import webcurriculumdesign.backend.data.constant.Constant;
 import webcurriculumdesign.backend.data.dao.MessageDao;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
@@ -22,6 +21,7 @@ import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.CommonUtil;
 import webcurriculumdesign.backend.util.JWTUtil;
+import webcurriculumdesign.backend.util.RedisUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -31,8 +31,8 @@ import java.util.Objects;
 
 @Service
 public class AuthService {
-    @Resource(name = "cache")
-    IGlobalCache iGlobalCache;
+    @Resource
+    RedisUtil redisUtil;
     @Resource
     private SpringTemplateEngine templateEngine;
     @Resource
@@ -45,13 +45,15 @@ public class AuthService {
     UserMapper userMapper;
     @Resource
     UserService userService;
+    @Resource
+    JWTUtil jwtUtil;
 
     // 注册
     @Transactional
     public Result signUp(String userMail, String password, String mailVerificationCode, String signUpRole) {
         // 校验邮件验证码
-        String redisIKey = "MailVerificationCode-" + userMail;
-        String trueCode = (String) iGlobalCache.get(redisIKey);
+        String redisIKey = "WebDesign:MailVerificationCode:" + userMail;
+        String trueCode = (String) redisUtil.get(redisIKey);
         if (trueCode == null || !trueCode.equals(mailVerificationCode)) return Result.error(Response.SC_UNAUTHORIZED, "验证码有误");
 
         // 密码加密并存储
@@ -110,9 +112,9 @@ public class AuthService {
         mailService.sendMail(mailTemplate);
 
         // 存入Redis
-        String redisIKey = "MailVerificationCode-" + userMail;
+        String redisIKey = "WebDesign:MailVerificationCode:" + userMail;
         try {
-            iGlobalCache.set(redisIKey, mailVerificationCode, Constant.MAIL_VERIFICATION_CODE_EXPIRE_TIME);
+            redisUtil.set(redisIKey, mailVerificationCode, Constant.MAIL_VERIFICATION_CODE_EXPIRE_TIME);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "Redis存储异常");
@@ -131,10 +133,10 @@ public class AuthService {
 
         // 生成accessToken和refreshToken
         try{
-            String refreshToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getRole(), Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
-            iGlobalCache.set(user.getMail(), refreshToken, Constant.REFRESH_EXPIRE_TIME);
+            String refreshToken = jwtUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getRole(), TokenType.REFRESH.type);
+            redisUtil.set("WebDesign:RefreshToken:" + user.getMail(), refreshToken, jwtUtil.REFRESH_EXPIRE_TIME);
 
-            String accessToken = JWTUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getRole(), Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
+            String accessToken = jwtUtil.getTokenWithPayLoad(user.getId().toString(), user.getMail(), user.getRole(), TokenType.ACCESS.type);
 
             Map<String, Object> map = new HashMap<>();
             map.put("accessToken", accessToken);
@@ -157,10 +159,10 @@ public class AuthService {
 
     // 通过邮箱更新用户密码
     public Result updatePassword(String verificationCode, String userMail, String newPassword) {
-        String redisIKey = "MailVerificationCode-" + userMail;
+        String redisIKey = "WebDesign:MailVerificationCode:" + userMail;
 
         // 校验验证码
-        if (iGlobalCache.get(redisIKey) == null || !iGlobalCache.get(redisIKey).equals(verificationCode)) {
+        if (redisUtil.get(redisIKey) == null || !redisUtil.get(redisIKey).equals(verificationCode)) {
             return Result.error(Response.SC_UNAUTHORIZED, "验证码错误");
         }
 
@@ -185,7 +187,7 @@ public class AuthService {
     public Result refresh(String refreshToken) {
         try {
             // 获取refreshToken的payload信息
-            DecodedJWT info = JWTUtil.getTokenInfo(refreshToken, Constant.REFRESH_SECRET_KEY);
+            DecodedJWT info = jwtUtil.getTokenInfo(refreshToken, TokenType.REFRESH.type);
 
             // 判断是否为refreshToken
             String tokenType = info.getClaim("type").asString();
@@ -196,16 +198,16 @@ public class AuthService {
             String role = info.getClaim("role").asString();
 
             // 生成新token
-            if (Objects.equals(refreshToken, iGlobalCache.get(userMail))) {
-                String newAccessToken = JWTUtil.getTokenWithPayLoad(id, userMail, role, Constant.EXPIRE_TIME, Constant.SECRET_KEY, TokenType.ACCESS.type);
+            if (Objects.equals(refreshToken, redisUtil.get(userMail))) {
+                String newAccessToken = jwtUtil.getTokenWithPayLoad(id, userMail, role, TokenType.ACCESS.type);
                 Map<String, String> map = new HashMap<>();
                 map.put("accessToken", newAccessToken);
 
                 // 判断refreshToken时效
-                long timeLeft = iGlobalCache.getExpire(userMail);
-                if (timeLeft <= Constant.REFRESH_BOUND) {
-                    String newRefreshToken = JWTUtil.getTokenWithPayLoad(id, userMail, role, Constant.REFRESH_EXPIRE_TIME, Constant.REFRESH_SECRET_KEY, TokenType.REFRESH.type);
-                    iGlobalCache.set(userMail, newRefreshToken, Constant.REFRESH_EXPIRE_TIME);
+                long timeLeft = redisUtil.getExpire(userMail);
+                if (timeLeft <= jwtUtil.REFRESH_BOUND) {
+                    String newRefreshToken = jwtUtil.getTokenWithPayLoad(id, userMail, role, TokenType.REFRESH.type);
+                    redisUtil.set(userMail, newRefreshToken, jwtUtil.REFRESH_EXPIRE_TIME);
                     map.put("refreshToken", newRefreshToken);
                 }
 

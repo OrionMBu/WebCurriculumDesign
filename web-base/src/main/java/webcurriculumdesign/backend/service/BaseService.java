@@ -6,7 +6,6 @@ import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import webcurriculumdesign.backend.cache.IGlobalCache;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
@@ -20,6 +19,7 @@ import webcurriculumdesign.backend.mapper.MainMenuMapper;
 import webcurriculumdesign.backend.mapper.NewsMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.MenuUtil;
+import webcurriculumdesign.backend.util.RedisUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,8 +39,8 @@ public class BaseService {
     StaticValueDao staticValueDao;
     @Resource
     UserService userService;
-    @Resource(name = "cache")
-    IGlobalCache iGlobalCache;
+    @Resource
+    RedisUtil redisUtil;
 
     // 更新用户密码
     public Result updatePassword(String previousPassword, String newPassword) {
@@ -77,7 +77,7 @@ public class BaseService {
 
         // 校验邮件验证码
         String redisIKey = "MailVerificationCode-" + newMail;
-        String trueCode = (String) iGlobalCache.get(redisIKey);
+        String trueCode = (String) redisUtil.get(redisIKey);
         if (trueCode == null || !trueCode.equals(mailVerificationCode)) return Result.error(Response.SC_UNAUTHORIZED, "验证码有误");
 
         // 更新邮箱

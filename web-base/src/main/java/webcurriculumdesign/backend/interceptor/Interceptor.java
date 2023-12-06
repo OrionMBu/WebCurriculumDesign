@@ -5,12 +5,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.constant.TokenType;
-import webcurriculumdesign.backend.data.constant.Constant;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.util.JWTUtil;
 
@@ -21,7 +22,11 @@ import java.util.Objects;
 /**
  * 拦截器，判断用户权限，返回值为true则放行，false则中止
  */
+@Component
 public class Interceptor implements HandlerInterceptor {
+    @Value("${secret_key.token}")
+    private String SECRET_KEY;
+
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         // 判断调用的是不是一个接口方法 TODO
@@ -46,10 +51,10 @@ public class Interceptor implements HandlerInterceptor {
 
                 try{
                     // 验证token
-                    JWTUtil.verify(accessToken, Constant.SECRET_KEY);
+                    JWTUtil.verify(accessToken, SECRET_KEY);
 
                     // 获取token的payload中信息
-                    DecodedJWT info = JWTUtil.getTokenInfo(accessToken, Constant.SECRET_KEY);
+                    DecodedJWT info = JWTUtil.getTokenInfo(accessToken, SECRET_KEY);
 
                     // 判断是否为accessToken
                     String tokenType = info.getClaim("type").asString();
