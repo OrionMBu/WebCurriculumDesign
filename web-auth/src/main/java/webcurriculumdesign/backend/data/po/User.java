@@ -47,4 +47,9 @@ public class User {
     用户头像
      */
     private String profile;
+
+    /*
+    注册时间
+     */
+    private long signUpTime;
 }

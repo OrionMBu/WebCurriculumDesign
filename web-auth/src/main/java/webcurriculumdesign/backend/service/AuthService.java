@@ -23,6 +23,7 @@ import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.CommonUtil;
 import webcurriculumdesign.backend.util.JWTUtil;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +57,10 @@ public class AuthService {
         // 密码加密并存储
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
+        Instant instant = Instant.now();
+
         // 判断用户权限
-        User user = new User(null, userMail, hashedPassword, null, null, "");
+        User user = new User(null, userMail, hashedPassword, null, null, "", instant.toEpochMilli());
         switch (signUpRole) {
             case "0" -> user.setRole(Role.ADMIN.role);
             case "1" -> user.setRole(Role.TEACHER.role);
