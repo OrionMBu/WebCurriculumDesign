@@ -144,6 +144,10 @@ public class AuthService {
             map.put("mail", user.getMail());
             map.put("name", userService.getUserData(user.getId()).get("name"));
 
+            // 获取当前时间戳并更新登录时间
+            Instant instant = Instant.now();
+            userMapper.updateLoginTime(instant.toEpochMilli(), user.getMail());
+
             return Result.success(map);
         } catch (Exception e){
             System.out.println(e.getMessage());
