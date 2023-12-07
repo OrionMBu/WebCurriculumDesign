@@ -15,6 +15,12 @@ public class AdminController {
     @Resource
     AdminService adminService;
 
+    /**
+     * 获取登录统计
+     *
+     * @param pastDay 获取前面几天的数据，默认值为7
+     * @param containToday 是否包括今天，默认值为false
+     */
     @RequiredLogin
     @GetMapping("/getLoginData")
     public Result getLoginData(@RequestParam(required = false, defaultValue = "7") int pastDay,
