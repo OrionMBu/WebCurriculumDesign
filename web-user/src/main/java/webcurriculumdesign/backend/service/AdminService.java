@@ -54,15 +54,24 @@ public class AdminService {
         return mapUtil.setValuesFromMap(data, Admin.class);
     }
 
+    // 获取登录统计
     public Result getLoginData(int pastDay, boolean containToday) {
+        // 获取当天日期
         LocalDate today = LocalDate.now();
+
+        // 结果列表
         List<Map<String, Integer>> resultList = new ArrayList<>();
+
         for (int i = 0; i <= pastDay; i++) {
+            // 判断是否需要当天的数据
             if (!containToday && i == 0) continue;
+
+            // 获取前几天的日期
             LocalDate previousDay = today.minusDays(i);
             String day = previousDay.format(DateTimeFormatter.ofPattern("MM-dd"));
             String redisKey = "WebDesign:Login:" + day;
 
+            // 查询Redis
             Object value = redisUtil.get(redisKey);
             Map<String, Integer> map = new HashMap<>();
             if (value != null) {
