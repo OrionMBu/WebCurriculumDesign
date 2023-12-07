@@ -156,7 +156,7 @@ public class AuthService {
             LocalDate localDate = LocalDate.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
 
             // 修改Redis中的登录记录
-            String redisKey = "WebDesign:Login:" + localDate.format(DateTimeFormatter.ofPattern("MM-dd"));
+            String redisKey = "WebDesign:Login:" + user.getRole() + ":" + localDate.format(DateTimeFormatter.ofPattern("MM-dd"));
             Object login = redisUtil.get(redisKey);
             if (login == null) {
                 redisUtil.set(redisKey, "1",  7 * 24 * 3600);
