@@ -24,8 +24,9 @@ import webcurriculumdesign.backend.util.JWTUtil;
 import webcurriculumdesign.backend.util.RedisUtil;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,12 +153,10 @@ public class AuthService {
             Instant instant = Instant.now();
             userMapper.updateLoginTime(instant.toEpochMilli(), user.getMail());
 
-            LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
-            String month = String.valueOf(localDateTime.getMonthValue());
-            String day = String.valueOf(localDateTime.getDayOfMonth());
+            LocalDate localDate = LocalDate.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
 
             // 修改Redis中的登录记录
-            String redisKey = "WebDesign:Login:" + month + "-" + day;
+            String redisKey = "WebDesign:Login:" + localDate.format(DateTimeFormatter.ofPattern("MM-dd"));
             Object login = redisUtil.get(redisKey);
             if (login == null) {
                 redisUtil.set(redisKey, "1",  7 * 24 * 3600);
