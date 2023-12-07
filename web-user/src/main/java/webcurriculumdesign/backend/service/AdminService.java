@@ -84,6 +84,7 @@ public class AdminService {
         return Result.success(result);
     }
 
+    // 获取学生人数统计
     public Result getStudentNumber() {
         return Result.success(studentMapper.countStudentNumber());
     }
