@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import webcurriculumdesign.backend.data.po.Admin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.AdminMapper;
+import webcurriculumdesign.backend.mapper.StudentMapper;
 import webcurriculumdesign.backend.util.MapUtil;
 import webcurriculumdesign.backend.util.RedisUtil;
 
@@ -22,6 +23,8 @@ public class AdminService {
     UserService<Admin> userService;
     @Resource
     AdminMapper adminMapper;
+    @Resource
+    StudentMapper studentMapper;
     @Resource
     MapUtil<Admin> mapUtil;
     @Resource
@@ -83,5 +86,9 @@ public class AdminService {
             resultList.add(map);
         }
         return Result.success(resultList);
+    }
+
+    public Result getStudentNumber() {
+        return Result.success(studentMapper.countStudentNumber());
     }
 }

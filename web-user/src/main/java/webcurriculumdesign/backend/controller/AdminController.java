@@ -27,4 +27,14 @@ public class AdminController {
                                @RequestParam(required = false, defaultValue = "false") boolean containToday) {
         return adminService.getLoginData(pastDay, containToday);
     }
+
+    /**
+     * 获取学生人数统计
+     *
+     */
+    @RequiredLogin
+    @GetMapping("/getStudentNumber")
+    public Result getStudentNumber() {
+        return adminService.getStudentNumber();
+    }
 }
