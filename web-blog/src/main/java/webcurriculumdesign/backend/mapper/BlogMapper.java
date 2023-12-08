@@ -1,9 +1,8 @@
 package webcurriculumdesign.backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.springframework.scheduling.annotation.Async;
 import webcurriculumdesign.backend.data.po.Blog;
 
 import java.util.List;
@@ -36,6 +35,11 @@ public interface BlogMapper extends BaseMapper<Blog> {
     @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.id = #{blogId}")
     Blog getBlog(Integer blogId);
 
+    /**
+     * 通过用户id获取博客列表
+     *
+     * @param userId 用户id
+     */
     @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId}")
     List<Blog> getBlogByUserId(Integer userId);
 
@@ -56,4 +60,40 @@ public interface BlogMapper extends BaseMapper<Blog> {
      */
     @Select("SELECT COUNT(*) FROM blog_like WHERE blog_id = #{blogId} AND user_id = #{userId}")
     int alreadyLiked(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
+
+    /**
+     * 插入点赞记录
+     *
+     * @param blogId 博客id
+     * @param userId 用户id
+     */
+    @Insert("INSERT INTO blog_like VALUES (NULL, #{blogId}, #{userId})")
+    void addLike(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
+
+    /**
+     * 更新博客点赞
+     *
+     * @param blogId 博客id
+     */
+    @Async
+    @Update("UPDATE blog SET `like` = (SELECT COUNT(id) FROM blog_like WHERE blog_id = blog.id) WHERE id = #{blogId}")
+    void updateLike(@Param("blogId") Integer blogId);
+
+    /**
+     * 插入浏览记录，重复则更新
+     *
+     * @param blogId 博客id
+     * @param userId 用户id
+     */
+    @Insert("INSERT INTO blog_browse(blog_id, user_id) VALUES (#{blogId}, #{userId}) ON DUPLICATE KEY UPDATE times = times + 1, last_time = CURRENT_TIMESTAMP")
+    void addBrowse(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
+
+    /**
+     * 更新博客浏览量
+     *
+     * @param blogId 博客id
+     */
+    @Async
+    @Update("UPDATE blog SET browse = (SELECT SUM(times) FROM blog_browse WHERE blog_browse.blog_id = blog.id) WHERE id = #{blogId}")
+    void updateBrowse(@Param("blogId") Integer blogId);
 }

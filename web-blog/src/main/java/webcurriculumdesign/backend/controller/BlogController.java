@@ -1,10 +1,8 @@
 package webcurriculumdesign.backend.controller;
 
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.annotation.RequiredLogin;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.service.BlogService;
@@ -48,4 +46,25 @@ public class BlogController {
         return blogService.getPersonalBlog(userId);
     }
 
+    /**
+     * 添加点赞
+     *
+     * @param blogId 博客id
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @PostMapping("/like")
+    public Result like(@RequestParam int blogId) {
+        return blogService.like(blogId);
+    }
+
+    /**
+     * 上传博客图片
+     *
+     * @param file 图片
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @PostMapping("/uploadBlogImage")
+    public Result uploadBlogImage(@RequestParam("fileToUpload") MultipartFile file) {
+        return blogService.uploadBlogImage(file);
+    }
 }
