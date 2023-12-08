@@ -59,7 +59,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      *
      * @param userId 用户id
      */
-    @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId}")
+    @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId} ORDER BY publish_time")
     List<Blog> getBlogByUserId(Integer userId);
 
     /**
@@ -67,7 +67,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      *
      * @param blogId 博客id
      */
-    @Select("SELECT comment, name, profile, time FROM blog_comment JOIN info_user ON blog_comment.user_id = info_user.id JOIN info_student ON info_user.id = info_student.user_id WHERE blog_id = #{blogId}")
+    @Select("SELECT comment, name, profile, time FROM blog_comment JOIN info_user ON blog_comment.user_id = info_user.id JOIN info_student ON info_user.id = info_student.user_id WHERE blog_id = #{blogId} ORDER BY time")
     List<Map<String, Object>> getComments(Integer blogId);
 
     /**
