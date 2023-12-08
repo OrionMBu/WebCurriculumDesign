@@ -57,6 +57,11 @@ public class BlogController {
         return blogService.like(blogId);
     }
 
+    /**
+     * 撤销点赞
+     *
+     * @param blogId 博客id
+     */
     @RequiredLogin(roles = "STUDENT")
     @DeleteMapping("/revokeLike")
     public Result revokeLike(@RequestParam int blogId) {
