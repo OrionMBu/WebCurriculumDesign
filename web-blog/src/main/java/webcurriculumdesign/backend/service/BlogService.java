@@ -63,13 +63,13 @@ public class BlogService {
         // 删除指定博客
         try {
             // 删除浏览记录
-            blogMapper.deleteBlogBrowseByBlogId(blogId);
+            blogMapper.deleteBrowseByBlogId(blogId);
 
             // 删除点赞记录
-            blogMapper.deleteBlogLikeByBlogId(blogId);
+            blogMapper.deleteLikeByBlogId(blogId);
 
             // 删除评论记录
-            blogMapper.deleteBlogCommentByBlogId(blogId);
+            blogMapper.deleteCommentByBlogId(blogId);
 
             // 删除博客
             blogMapper.revokeBlog(blogId);

@@ -119,7 +119,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @param blogId 博客id
      */
     @Delete("DELETE FROM blog_comment WHERE blog_id = #{blogId}")
-    void deleteBlogCommentByBlogId(@Param("blogId") Integer blogId);
+    void deleteCommentByBlogId(@Param("blogId") Integer blogId);
 
     /**
      * 获取用户对指定博客的点赞数
@@ -155,7 +155,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @param blogId 博客id
      */
     @Delete("DELETE FROM blog_like WHERE blog_id = #{blogId}")
-    void deleteBlogLikeByBlogId(@Param("blogId") Integer blogId);
+    void deleteLikeByBlogId(@Param("blogId") Integer blogId);
 
     /**
      * 更新博客点赞
@@ -181,7 +181,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @param blogId 博客id
      */
     @Delete("DELETE FROM blog_browse WHERE blog_id = #{blogId}")
-    void deleteBlogBrowseByBlogId(@Param("blogId") Integer blogId);
+    void deleteBrowseByBlogId(@Param("blogId") Integer blogId);
 
     /**
      * 更新博客浏览量
