@@ -148,4 +148,14 @@ public interface BlogMapper extends BaseMapper<Blog> {
     @Async
     @Update("UPDATE blog SET browse = (SELECT SUM(times) FROM blog_browse WHERE blog_browse.blog_id = blog.id) WHERE id = #{blogId}")
     void updateBrowse(@Param("blogId") Integer blogId);
+
+    /**
+     * 插入评论
+     *
+     * @param blogId 博客id
+     * @param userId 用户id
+     * @param comment 评论
+     */
+    @Insert("INSERT INTO blog_comment(blog_id, user_id, comment) VALUES (#{blogId}, #{userId}, #{comment})")
+    void insertComment(@Param("blogId") Integer blogId, @Param("userId") Integer userId, @Param("comment") String comment);
 }

@@ -178,6 +178,20 @@ public class BlogService {
         return Result.ok();
     }
 
+    public Result comment(int blogId, String comment) {
+        // 获取博客信息
+        Blog blog = blogMapper.getBlog(blogId);
+        if (blog == null) return Result.error(Response.SC_BAD_REQUEST, "博客走丢了");
+
+        // 插入评论
+        try {
+            blogMapper.insertComment(blogId, CurrentUser.id, comment);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+        }
+    }
+
     // 更新博客图片
     public Result uploadBlogImage(MultipartFile file) {
         String imagePath;

@@ -96,6 +96,12 @@ public class BlogController {
         return blogService.revokeLike(blogId);
     }
 
+    @RequiredLogin(roles = "STUDENT")
+    @PostMapping("/comment")
+    public Result comment(@RequestParam int blogId, @RequestParam String comment) {
+        return blogService.comment(blogId, comment);
+    }
+
     /**
      * 上传博客图片
      *
