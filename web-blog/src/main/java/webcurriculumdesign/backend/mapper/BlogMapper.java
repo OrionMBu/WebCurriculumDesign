@@ -23,6 +23,14 @@ public interface BlogMapper extends BaseMapper<Blog> {
     void insertBlog(@Param("userId") Integer userId, @Param("title") String title, @Param("digest") String digest, @Param("image") String image, @Param("content") String content);
 
     /**
+     * 删除博客
+     *
+     * @param blogId 博客id
+     */
+    @Delete("DELETE FROM blog WHERE id = #{blogId}")
+    void revokeBlog(@Param("blogId") Integer blogId);
+
+    /**
      * 获取个人博客基本信息
      *
      * @param userId 用户id
@@ -63,6 +71,14 @@ public interface BlogMapper extends BaseMapper<Blog> {
     List<Map<String, Object>> getComments(Integer blogId);
 
     /**
+     * 删除某博客的所有评论数据
+     *
+     * @param blogId 博客id
+     */
+    @Delete("DELETE FROM blog_comment WHERE blog_id = #{blogId}")
+    void deleteBlogCommentByBlogId(@Param("blogId") Integer blogId);
+
+    /**
      * 获取用户对指定博客的点赞数
      *
      * @param blogId 博客id
@@ -91,6 +107,14 @@ public interface BlogMapper extends BaseMapper<Blog> {
     void revokeLike(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
 
     /**
+     * 删除某博客的所有点赞数据
+     *
+     * @param blogId 博客id
+     */
+    @Delete("DELETE FROM blog_like WHERE blog_id = #{blogId}")
+    void deleteBlogLikeByBlogId(@Param("blogId") Integer blogId);
+
+    /**
      * 更新博客点赞
      *
      * @param blogId 博客id
@@ -107,6 +131,14 @@ public interface BlogMapper extends BaseMapper<Blog> {
      */
     @Insert("INSERT INTO blog_browse(blog_id, user_id) VALUES (#{blogId}, #{userId}) ON DUPLICATE KEY UPDATE times = times + 1, last_time = CURRENT_TIMESTAMP")
     void addBrowse(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
+
+    /**
+     * 删除某博客的所有浏览数据
+     *
+     * @param blogId 博客id
+     */
+    @Delete("DELETE FROM blog_browse WHERE blog_id = #{blogId}")
+    void deleteBlogBrowseByBlogId(@Param("blogId") Integer blogId);
 
     /**
      * 更新博客浏览量

@@ -4,8 +4,10 @@ import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
+import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.Blog;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.BlogMapper;
@@ -40,6 +42,7 @@ public class BlogService {
     public Result getBlog(int blogId) {
         // 获取博客
         Blog blog = blogMapper.getBlog(blogId);
+        if (blog == null) return Result.error(Response.SC_BAD_REQUEST, "博客走丢了");
 
         Map<String, Object> result;
         try {
@@ -97,9 +100,15 @@ public class BlogService {
 
     // 添加点赞
     public Result like(int blogId) {
+        // 获取博客信息
         Blog blog = blogMapper.getBlog(blogId);
+        if (blog == null) return Result.error(Response.SC_BAD_REQUEST, "博客走丢了");
+
+        // 判断点赞人是否为自己
         if (blog.getUserId().equals(CurrentUser.id)) return Result.error(Response.SC_BAD_REQUEST, "无法给自己点赞");
+
         try {
+            // 插入点赞记录
             blogMapper.addLike(blogId, CurrentUser.id);
             blogMapper.updateLike(blogId);
             return Result.ok();
@@ -151,5 +160,34 @@ public class BlogService {
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
         return Result.ok();
+    }
+
+    // 撤销博客
+    @Transactional
+    public Result revokeBlog(int blogId) {
+        // 获取博客信息
+        Blog blog = blogMapper.getBlog(blogId);
+        if (blog == null) return Result.ok();
+
+        // 只允许管理员和博客作者删除
+        if (!blog.getUserId().equals(CurrentUser.id) && !CurrentUser.role.equals(Role.ADMIN.role)) return Result.error(Response.SC_FORBIDDEN, "不要删别人的博客哟");
+
+        // 删除指定博客
+        try {
+            // 删除浏览记录
+            blogMapper.deleteBlogBrowseByBlogId(blogId);
+
+            // 删除点赞记录
+            blogMapper.deleteBlogLikeByBlogId(blogId);
+
+            // 删除评论记录
+            blogMapper.deleteBlogCommentByBlogId(blogId);
+
+            // 删除博客
+            blogMapper.revokeBlog(blogId);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+        }
     }
 }

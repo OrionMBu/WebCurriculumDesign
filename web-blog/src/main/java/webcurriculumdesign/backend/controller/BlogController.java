@@ -95,4 +95,15 @@ public class BlogController {
                               @RequestParam String content) {
         return blogService.publishBlog(file, title, digest, content);
     }
+
+    /**
+     * 删除博客
+     *
+     * @param blogId 博客id
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @DeleteMapping("/revokeBlog")
+    public Result revokeBlog(@RequestParam int blogId) {
+        return blogService.revokeBlog(blogId);
+    }
 }
