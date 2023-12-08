@@ -106,7 +106,13 @@ public class BlogService {
         } catch (Exception e) {
             return Result.error(Response.SC_BAD_REQUEST, "已经赞过了哦");
         }
+    }
 
+    // 撤销点赞
+    public Result revokeLike(int blogId) {
+        blogMapper.revokeLike(blogId, CurrentUser.id);
+        blogMapper.updateLike(blogId);
+        return Result.ok();
     }
 
     // 更新博客图片

@@ -82,6 +82,15 @@ public interface BlogMapper extends BaseMapper<Blog> {
     void addLike(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
 
     /**
+     * 删除点赞记录
+     *
+     * @param blogId 博客id
+     * @param userId 用户id
+     */
+    @Delete("DELETE FROM blog_like WHERE blog_id = #{blogId} AND user_id = #{userId}")
+    void revokeLike(@Param("blogId") Integer blogId, @Param("userId") Integer userId);
+
+    /**
      * 更新博客点赞
      *
      * @param blogId 博客id
