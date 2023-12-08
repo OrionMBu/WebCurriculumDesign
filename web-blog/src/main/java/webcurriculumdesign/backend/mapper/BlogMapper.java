@@ -158,4 +158,13 @@ public interface BlogMapper extends BaseMapper<Blog> {
      */
     @Insert("INSERT INTO blog_comment(blog_id, user_id, comment) VALUES (#{blogId}, #{userId}, #{comment})")
     void insertComment(@Param("blogId") Integer blogId, @Param("userId") Integer userId, @Param("comment") String comment);
+
+    /**
+     * 更新博评论量
+     *
+     * @param blogId 博客id
+     */
+    @Async
+    @Update("UPDATE blog SET comment = (SELECT COUNT(id) FROM blog_comment WHERE blog_comment.blog_id = blog.id) WHERE id = #{blogId}")
+    void updateComment(@Param("blogId") Integer blogId);
 }

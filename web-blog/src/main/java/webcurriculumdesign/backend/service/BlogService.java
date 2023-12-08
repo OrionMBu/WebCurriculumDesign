@@ -178,6 +178,7 @@ public class BlogService {
         return Result.ok();
     }
 
+    // 更新博客评论
     public Result comment(int blogId, String comment) {
         // 获取博客信息
         Blog blog = blogMapper.getBlog(blogId);
@@ -186,6 +187,7 @@ public class BlogService {
         // 插入评论
         try {
             blogMapper.insertComment(blogId, CurrentUser.id, comment);
+            blogMapper.updateComment(blogId);
             return Result.ok();
         } catch (Exception e) {
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");

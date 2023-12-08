@@ -96,6 +96,12 @@ public class BlogController {
         return blogService.revokeLike(blogId);
     }
 
+    /**
+     * 添加评论
+     *
+     * @param blogId 博客id
+     * @param comment 博客评论
+     */
     @RequiredLogin(roles = "STUDENT")
     @PostMapping("/comment")
     public Result comment(@RequestParam int blogId, @RequestParam String comment) {
