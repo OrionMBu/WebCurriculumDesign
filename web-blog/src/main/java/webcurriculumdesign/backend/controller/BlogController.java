@@ -14,6 +14,34 @@ public class BlogController {
     BlogService blogService;
 
     /**
+     * 上传新博客
+     *
+     * @param file 预览图片，可无
+     * @param title 标题
+     * @param digest 摘要，可无
+     * @param content 正文
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @PostMapping("/publishBlog")
+    public Result publishBlog(@RequestParam(name = "previewImage", required = false) MultipartFile file,
+                              @RequestParam String title,
+                              @RequestParam(required = false, defaultValue = "") String digest,
+                              @RequestParam String content) {
+        return blogService.publishBlog(file, title, digest, content);
+    }
+
+    /**
+     * 删除博客
+     *
+     * @param blogId 博客id
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @DeleteMapping("/revokeBlog")
+    public Result revokeBlog(@RequestParam int blogId) {
+        return blogService.revokeBlog(blogId);
+    }
+
+    /**
      * 获取用户博客基础信息
      *
      * @param userId 用户id，非必须，默认为自己
@@ -77,33 +105,5 @@ public class BlogController {
     @PostMapping("/uploadBlogImage")
     public Result uploadBlogImage(@RequestParam("fileToUpload") MultipartFile file) {
         return blogService.uploadBlogImage(file);
-    }
-
-    /**
-     * 上传新博客
-     *
-     * @param file 预览图片，可无
-     * @param title 标题
-     * @param digest 摘要，可无
-     * @param content 正文
-     */
-    @RequiredLogin(roles = "STUDENT")
-    @PostMapping("/publishBlog")
-    public Result publishBlog(@RequestParam(name = "previewImage", required = false) MultipartFile file,
-                              @RequestParam String title,
-                              @RequestParam(required = false, defaultValue = "") String digest,
-                              @RequestParam String content) {
-        return blogService.publishBlog(file, title, digest, content);
-    }
-
-    /**
-     * 删除博客
-     *
-     * @param blogId 博客id
-     */
-    @RequiredLogin(roles = "STUDENT")
-    @DeleteMapping("/revokeBlog")
-    public Result revokeBlog(@RequestParam int blogId) {
-        return blogService.revokeBlog(blogId);
     }
 }
