@@ -139,7 +139,7 @@ public class BaseService {
      * @throws IOException IO异常
      * @throws FileUploadException 文件异常
      */
-    public String uploadFile(byte[] fileBytes, String userMail,String folderName, String fileName, boolean isBaseFile) throws IOException, FileUploadException {
+    public String uploadFile(byte[] fileBytes, String userMail, String folderName, String fileName, boolean isBaseFile) throws IOException, FileUploadException {
         // 判断文件是否为空
         if (fileBytes.length == 0) {
             throw new FileUploadException("上传文件为空");
