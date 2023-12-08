@@ -10,6 +10,17 @@ import java.util.Map;
 
 @Mapper
 public interface BlogMapper extends BaseMapper<Blog> {
+    /**
+     * 插入新博客
+     *
+     * @param userId 用户id
+     * @param title 标题
+     * @param digest 摘要
+     * @param image 图片地址
+     * @param content 正文
+     */
+    @Insert("INSERT INTO blog(user_id, title, digest, image, content) VALUES (#{userId}, #{title}, #{digest}, #{image}, #{content})")
+    void insertBlog(@Param("userId") Integer userId, @Param("title") String title, @Param("digest") String digest, @Param("image") String image, @Param("content") String content);
 
     /**
      * 获取个人博客基本信息

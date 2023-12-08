@@ -2,6 +2,7 @@ package webcurriculumdesign.backend.service;
 
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
@@ -15,6 +16,8 @@ import java.util.*;
 
 @Service
 public class BlogService {
+    @Value("${blog.default-preview-image}")
+    public String defaultImage;
     @Resource
     ImageUtil imageUtil;
     @Resource
@@ -93,5 +96,30 @@ public class BlogService {
         } catch (Exception e) {
             return Result.error(Response.SC_BAD_REQUEST, e.getMessage());
         }
+    }
+
+    /**
+     * 上传新博客
+     *
+     * @param file 预览图片
+     * @param title 标题
+     * @param digest 摘要
+     * @param content 正文
+     */
+    public Result publishBlog(MultipartFile file, String title, String digest, String content) {
+        try {
+            // 判断是否提供预览图片，没有则使用默认图片
+            if (file == null) {
+                blogMapper.insertBlog(CurrentUser.id, title, digest, defaultImage, content);
+            } else {
+                UUID uuid = UUID.randomUUID();
+                String shortUUID16 = uuid.toString().substring(0, 16);
+                String imagePath = imageUtil.uploadImage(file, "blog-preview-image", shortUUID16, false);
+                blogMapper.insertBlog(CurrentUser.id, title, digest, imagePath, content);
+            }
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return Result.ok();
     }
 }
