@@ -69,8 +69,30 @@ public class BlogService {
 
     // 获取用户所有博客信息
     public Result getPersonalBlog(int userId) {
-        if (userId != 0) CurrentUser.id = userId;
-        return Result.success(blogMapper.getBlogByUserId(CurrentUser.id));
+        // 判断是否为自己
+        boolean flag;
+        if (userId != 0) {
+            flag = CurrentUser.id == userId;
+            CurrentUser.id = userId;
+        } else {
+            flag = true;
+        }
+
+        // 获取所有博客
+        List<Blog> blogList = blogMapper.getBlogByUserId(CurrentUser.id);
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        // 添加是否为自己发布
+        for (Blog blog : blogList) {
+            try {
+                Map<String, Object> blogMap = MapUtil.convertObjectToMap(blog);
+                blogMap.put("selfPublish", flag);
+                result.add(blogMap);
+            } catch (Exception e) {
+                return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+            }
+        }
+        return Result.success(result);
     }
 
     // 添加点赞
