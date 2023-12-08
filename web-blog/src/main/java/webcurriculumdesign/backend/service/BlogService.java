@@ -25,6 +25,60 @@ public class BlogService {
     @Resource
     BlogMapper blogMapper;
 
+    /**
+     * 上传新博客
+     *
+     * @param file 预览图片
+     * @param title 标题
+     * @param digest 摘要
+     * @param content 正文
+     */
+    public Result publishBlog(MultipartFile file, String title, String digest, String content) {
+        try {
+            // 判断是否提供预览图片，没有则使用默认图片
+            if (file == null) {
+                blogMapper.insertBlog(CurrentUser.id, title, digest, defaultImage, content);
+            } else {
+                UUID uuid = UUID.randomUUID();
+                String shortUUID16 = uuid.toString().substring(0, 16);
+                String imagePath = imageUtil.uploadImage(file, "blog-preview-image", shortUUID16, false);
+                blogMapper.insertBlog(CurrentUser.id, title, digest, imagePath, content);
+            }
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return Result.ok();
+    }
+
+    // 撤销博客
+    @Transactional
+    public Result revokeBlog(int blogId) {
+        // 获取博客信息
+        Blog blog = blogMapper.getBlog(blogId);
+        if (blog == null) return Result.ok();
+
+        // 只允许管理员和博客作者删除
+        if (!blog.getUserId().equals(CurrentUser.id) && !CurrentUser.role.equals(Role.ADMIN.role)) return Result.error(Response.SC_FORBIDDEN, "不要删别人的博客哟");
+
+        // 删除指定博客
+        try {
+            // 删除浏览记录
+            blogMapper.deleteBlogBrowseByBlogId(blogId);
+
+            // 删除点赞记录
+            blogMapper.deleteBlogLikeByBlogId(blogId);
+
+            // 删除评论记录
+            blogMapper.deleteBlogCommentByBlogId(blogId);
+
+            // 删除博客
+            blogMapper.revokeBlog(blogId);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+        }
+    }
+
     // 获取用户博客基础信息
     public Result getPersonalBlogInfo(int userId) {
         // 判断是否查询指定用户信息
@@ -134,60 +188,6 @@ public class BlogService {
             return Result.success(imagePath);
         } catch (Exception e) {
             return Result.error(Response.SC_BAD_REQUEST, e.getMessage());
-        }
-    }
-
-    /**
-     * 上传新博客
-     *
-     * @param file 预览图片
-     * @param title 标题
-     * @param digest 摘要
-     * @param content 正文
-     */
-    public Result publishBlog(MultipartFile file, String title, String digest, String content) {
-        try {
-            // 判断是否提供预览图片，没有则使用默认图片
-            if (file == null) {
-                blogMapper.insertBlog(CurrentUser.id, title, digest, defaultImage, content);
-            } else {
-                UUID uuid = UUID.randomUUID();
-                String shortUUID16 = uuid.toString().substring(0, 16);
-                String imagePath = imageUtil.uploadImage(file, "blog-preview-image", shortUUID16, false);
-                blogMapper.insertBlog(CurrentUser.id, title, digest, imagePath, content);
-            }
-        } catch (Exception e) {
-            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-        }
-        return Result.ok();
-    }
-
-    // 撤销博客
-    @Transactional
-    public Result revokeBlog(int blogId) {
-        // 获取博客信息
-        Blog blog = blogMapper.getBlog(blogId);
-        if (blog == null) return Result.ok();
-
-        // 只允许管理员和博客作者删除
-        if (!blog.getUserId().equals(CurrentUser.id) && !CurrentUser.role.equals(Role.ADMIN.role)) return Result.error(Response.SC_FORBIDDEN, "不要删别人的博客哟");
-
-        // 删除指定博客
-        try {
-            // 删除浏览记录
-            blogMapper.deleteBlogBrowseByBlogId(blogId);
-
-            // 删除点赞记录
-            blogMapper.deleteBlogLikeByBlogId(blogId);
-
-            // 删除评论记录
-            blogMapper.deleteBlogCommentByBlogId(blogId);
-
-            // 删除博客
-            blogMapper.revokeBlog(blogId);
-            return Result.ok();
-        } catch (Exception e) {
-            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
         }
     }
 }
