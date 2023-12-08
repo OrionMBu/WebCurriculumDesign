@@ -71,6 +71,49 @@ public interface BlogMapper extends BaseMapper<Blog> {
     List<Map<String, Object>> getComments(Integer blogId);
 
     /**
+     * 通过评论获取博主id
+     *
+     * @param commentId 评论id
+     */
+    @Select("SELECT blog.user_id FROM blog_comment JOIN blog ON blog_comment.blog_id = blog.id WHERE blog_comment.id = #{commentId}")
+    int getAuthorIdByCommentId(@Param("commentId") Integer commentId);
+
+    /**
+     * 通过评论id获取评论
+     *
+     * @param commentId 评论id
+     */
+    @Select("SELECT * FROM blog_comment WHERE blog_comment.id = #{commentId}")
+    Map<String, Object> getUserIdByCommentId(@Param("commentId") Integer commentId);
+
+    /**
+     * 插入评论
+     *
+     * @param blogId 博客id
+     * @param userId 用户id
+     * @param comment 评论
+     */
+    @Insert("INSERT INTO blog_comment(blog_id, user_id, comment) VALUES (#{blogId}, #{userId}, #{comment})")
+    void insertComment(@Param("blogId") Integer blogId, @Param("userId") Integer userId, @Param("comment") String comment);
+
+    /**
+     * 更新博评论量
+     *
+     * @param blogId 博客id
+     */
+    @Async
+    @Update("UPDATE blog SET comment = (SELECT COUNT(id) FROM blog_comment WHERE blog_comment.blog_id = blog.id) WHERE id = #{blogId}")
+    void updateComment(@Param("blogId") Integer blogId);
+
+    /**
+     * 删除指定评论
+     *
+     * @param commentId 评论id
+     */
+    @Delete("DELETE FROM blog_comment WHERE id = #{commentId}")
+    void deleteCommentByCommentId(@Param("commentId") Integer commentId);
+
+    /**
      * 删除某博客的所有评论数据
      *
      * @param blogId 博客id
@@ -148,23 +191,4 @@ public interface BlogMapper extends BaseMapper<Blog> {
     @Async
     @Update("UPDATE blog SET browse = (SELECT SUM(times) FROM blog_browse WHERE blog_browse.blog_id = blog.id) WHERE id = #{blogId}")
     void updateBrowse(@Param("blogId") Integer blogId);
-
-    /**
-     * 插入评论
-     *
-     * @param blogId 博客id
-     * @param userId 用户id
-     * @param comment 评论
-     */
-    @Insert("INSERT INTO blog_comment(blog_id, user_id, comment) VALUES (#{blogId}, #{userId}, #{comment})")
-    void insertComment(@Param("blogId") Integer blogId, @Param("userId") Integer userId, @Param("comment") String comment);
-
-    /**
-     * 更新博评论量
-     *
-     * @param blogId 博客id
-     */
-    @Async
-    @Update("UPDATE blog SET comment = (SELECT COUNT(id) FROM blog_comment WHERE blog_comment.blog_id = blog.id) WHERE id = #{blogId}")
-    void updateComment(@Param("blogId") Integer blogId);
 }

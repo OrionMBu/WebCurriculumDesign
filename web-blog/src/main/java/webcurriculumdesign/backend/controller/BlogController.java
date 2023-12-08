@@ -108,6 +108,12 @@ public class BlogController {
         return blogService.comment(blogId, comment);
     }
 
+    @RequiredLogin(roles = "STUDENT")
+    @DeleteMapping("/deleteComment")
+    public Result deleteComment(@RequestParam int commentId) {
+        return blogService.deleteComment(commentId);
+    }
+
     /**
      * 上传博客图片
      *

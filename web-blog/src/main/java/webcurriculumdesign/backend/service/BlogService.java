@@ -194,6 +194,19 @@ public class BlogService {
         }
     }
 
+    // 删除评论
+    public Result deleteComment(int commentId) {
+        Map<String, Object> commentMap = blogMapper.getUserIdByCommentId(commentId);
+        if (commentMap.get("user_id").equals(CurrentUser.id) || blogMapper.getAuthorIdByCommentId(commentId) == CurrentUser.id || CurrentUser.role.equals(Role.ADMIN.role)) {
+            blogMapper.deleteCommentByCommentId(commentId);
+            blogMapper.updateComment((Integer) commentMap.get("blog_id"));
+            return Result.ok();
+        } else {
+            return Result.error(Response.SC_FORBIDDEN, "不能删除这个评论哦");
+        }
+
+    }
+
     // 更新博客图片
     public Result uploadBlogImage(MultipartFile file) {
         String imagePath;
