@@ -75,6 +75,8 @@ public class BlogService {
 
     // 添加点赞
     public Result like(int blogId) {
+        Blog blog = blogMapper.getBlog(blogId);
+        if (blog.getUserId().equals(CurrentUser.id)) return Result.error(Response.SC_BAD_REQUEST, "无法给自己点赞");
         try {
             blogMapper.addLike(blogId, CurrentUser.id);
             blogMapper.updateLike(blogId);
