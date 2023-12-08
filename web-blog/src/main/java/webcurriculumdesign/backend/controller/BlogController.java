@@ -37,4 +37,15 @@ public class BlogController {
         return blogService.getBlog(blogId);
     }
 
+    /**
+     * 获取用户所有博客信息
+     *
+     * @param userId 用户id，默认为自己
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @GetMapping("/getPersonalBlog")
+    public Result getPersonalBlog(@RequestParam(required = false, defaultValue = "0") int userId) {
+        return blogService.getPersonalBlog(userId);
+    }
+
 }

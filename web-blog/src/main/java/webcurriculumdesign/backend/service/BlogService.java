@@ -56,4 +56,9 @@ public class BlogService {
 
         return Result.success(result);
     }
+
+    public Result getPersonalBlog(int userId) {
+        if (userId != 0) CurrentUser.id = userId;
+        return Result.success(blogMapper.getBlogByUserId(CurrentUser.id));
+    }
 }

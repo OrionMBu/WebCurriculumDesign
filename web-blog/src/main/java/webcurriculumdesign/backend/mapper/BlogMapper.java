@@ -36,6 +36,9 @@ public interface BlogMapper extends BaseMapper<Blog> {
     @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.id = #{blogId}")
     Blog getBlog(Integer blogId);
 
+    @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId}")
+    List<Blog> getBlogByUserId(Integer userId);
+
     /**
      * 获取指定博客的评论
      *

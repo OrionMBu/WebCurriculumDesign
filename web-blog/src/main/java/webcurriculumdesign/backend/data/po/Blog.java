@@ -62,4 +62,9 @@ public class Blog {
     点赞次数
      */
     private Integer like;
+
+    /*
+    评论数
+     */
+    private Integer comment;
 }
