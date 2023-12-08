@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * 博客
  */
@@ -52,6 +54,11 @@ public class Blog {
     正文
      */
     private String content;
+
+    /*
+    发布时间
+     */
+    private LocalDateTime publishTime;
 
     /*
     浏览次数
