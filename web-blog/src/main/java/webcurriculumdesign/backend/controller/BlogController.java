@@ -93,8 +93,30 @@ public class BlogController {
         return blogService.getPersonalBlog(userId);
     }
 
-//    @RequiredLogin(roles = "STUDENT")
-//    @GetMapping("/")
+    /**
+     * 查询博客
+     *
+     * @param title 标题
+     * @param digest 摘要
+     * @param content 正文
+     * @param author 作者
+     * @param order 排序类型（0 -> 发布时间排序，1 -> 点赞量排序，2 -> 浏览量排序，3 -> 评论量排序）
+     * @param isAsc 是否正序
+     * @param page 页数
+     * @param pageSize 每页数量
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @GetMapping("/searchBlog")
+    public Result searchBlog(@RequestParam(required = false, defaultValue = "") String title,
+                             @RequestParam(required = false, defaultValue = "") String digest,
+                             @RequestParam(required = false, defaultValue = "") String content,
+                             @RequestParam(required = false, defaultValue = "") String author,
+                             @RequestParam(required = false, defaultValue = "0") int order,
+                             @RequestParam(required = false, defaultValue = "true") boolean isAsc,
+                             @RequestParam(required = false, defaultValue = "1") int page,
+                             @RequestParam(required = false, defaultValue = "20") int pageSize) {
+        return blogService.searchBlog(title, digest, content, author, order, isAsc, page, pageSize);
+    }
 
     /**
      * 添加点赞

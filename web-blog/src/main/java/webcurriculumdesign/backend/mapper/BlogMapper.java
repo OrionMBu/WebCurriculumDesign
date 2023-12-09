@@ -1,6 +1,9 @@
 package webcurriculumdesign.backend.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.*;
 import org.springframework.scheduling.annotation.Async;
 import webcurriculumdesign.backend.data.po.Blog;
@@ -73,6 +76,17 @@ public interface BlogMapper extends BaseMapper<Blog> {
      */
     @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId} ORDER BY publish_time")
     List<Blog> getBlogByUserId(Integer userId);
+
+    /**
+     * 查询博客
+     *
+     * @param wrapper 查询条件
+     * @param page 分页
+     */
+    @Select("SELECT *, name AS author FROM blog " +
+            "LEFT JOIN info_student ON blog.user_id = info_student.user_id " +
+            "WHERE ${ew.sqlSegment}")
+    IPage<Blog> selectBlogList(@Param(Constants.WRAPPER) Wrapper<Blog> wrapper, IPage<Blog> page);
 
     /**
      * 获取指定博客的评论

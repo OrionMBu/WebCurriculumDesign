@@ -1,5 +1,8 @@
 package webcurriculumdesign.backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Value;
@@ -172,6 +175,46 @@ public class BlogService {
                 return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
             }
         }
+        return Result.success(result);
+    }
+
+    // 查询博客
+    public Result searchBlog(String title, String digest, String content, String author, int order, boolean isAsc, int page, int pageSize) {
+        // 模糊查询
+        QueryWrapper<Blog> blogQueryWrapper = new QueryWrapper<>();
+        blogQueryWrapper
+                .like("title", "%" + title + "%")
+                .like("title", "%" + digest + "%")
+                .like("title", "%" + content + "%")
+                .like("name", "%" + author + "%");
+
+        // 排序逻辑
+        switch (order) {
+            case 1 -> blogQueryWrapper.orderBy(true, isAsc, "like");
+            case 2 -> blogQueryWrapper.orderBy(true, isAsc, "browse");
+            case 4 -> blogQueryWrapper.orderBy(true, isAsc, "comment");
+            default -> blogQueryWrapper.orderBy(true, isAsc, "publish_time");
+        }
+
+        // 分页查询
+        IPage<Blog> iPage = new Page<>(page, pageSize);
+        IPage<Blog> blogIPage = blogMapper.selectBlogList(blogQueryWrapper, iPage);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        List<Blog> blogList = blogIPage.getRecords();
+
+        // 判断是否为自己发布的博客
+        try {
+            for (Blog blog : blogList) {
+                Map<String, Object> blogMap = MapUtil.convertObjectToMap(blog);
+                blogMap.put("selfPublish", blog.getUserId().equals(CurrentUser.id));
+                result.add(blogMap);
+            }
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+        }
+
+
         return Result.success(result);
     }
 
