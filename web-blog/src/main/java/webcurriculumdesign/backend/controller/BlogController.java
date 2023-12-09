@@ -31,6 +31,25 @@ public class BlogController {
     }
 
     /**
+     * 更新博客
+     *
+     * @param file 预览图片，可无
+     * @param title 标题
+     * @param digest 摘要，可无
+     * @param content 正文
+     * @param blogId 博客id
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @PatchMapping("/updateBlog")
+    public Result updateBlog(@RequestParam(name = "previewImage", required = false) MultipartFile file,
+                             @RequestParam(required = false, defaultValue = "") String title,
+                             @RequestParam(required = false, defaultValue = "") String digest,
+                             @RequestParam(required = false, defaultValue = "") String content,
+                             @RequestParam int blogId) {
+        return blogService.updateBlog(file, title, digest, content, blogId);
+    }
+
+    /**
      * 删除博客
      *
      * @param blogId 博客id
@@ -74,6 +93,9 @@ public class BlogController {
         return blogService.getPersonalBlog(userId);
     }
 
+//    @RequiredLogin(roles = "STUDENT")
+//    @GetMapping("/")
+
     /**
      * 添加点赞
      *
@@ -108,6 +130,11 @@ public class BlogController {
         return blogService.comment(blogId, comment);
     }
 
+    /**
+     * 删除注释
+     *
+     * @param commentId 评论id
+     */
     @RequiredLogin(roles = "STUDENT")
     @DeleteMapping("/deleteComment")
     public Result deleteComment(@RequestParam int commentId) {

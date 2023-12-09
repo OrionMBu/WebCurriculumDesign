@@ -23,6 +23,18 @@ public interface BlogMapper extends BaseMapper<Blog> {
     void insertBlog(@Param("userId") Integer userId, @Param("title") String title, @Param("digest") String digest, @Param("image") String image, @Param("content") String content);
 
     /**
+     * 更新博客
+     *
+     * @param blogId 博客id
+     * @param title 标题
+     * @param digest 摘要
+     * @param image 封面图片
+     * @param content 正文
+     */
+    @Update("UPDATE blog SET title = #{title}, digest = #{digest}, image = #{image}, content = #{content}, publish_time = CURRENT_TIMESTAMP WHERE id = #{blogId}")
+    void updateBlog(@Param("blogId") Integer blogId, @Param("title") String title, @Param("digest") String digest, @Param("image") String image, @Param("content") String content);
+
+    /**
      * 删除博客
      *
      * @param blogId 博客id

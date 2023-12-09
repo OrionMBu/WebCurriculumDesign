@@ -50,6 +50,29 @@ public class BlogService {
         return Result.ok();
     }
 
+    // 更新博客
+    public Result updateBlog(MultipartFile file, String title, String digest, String content, int blogId) {
+        // 判断是否能修改
+        Blog blog = blogMapper.getBlog(blogId);
+        if (blog == null) return Result.error(Response.SC_BAD_REQUEST, "修改的博客不存在");
+        if (!blog.getUserId().equals(CurrentUser.id) || !CurrentUser.role.equals(Role.ADMIN.role)) return Result.error(Response.SC_FORBIDDEN, "不要修改别人的博客哦");
+
+        try {
+            // 判断是否提供预览图片，没有则使用默认图片
+            if (file == null) {
+                blogMapper.updateBlog(blogId, title, digest, defaultImage, content);
+            } else {
+                UUID uuid = UUID.randomUUID();
+                String shortUUID16 = uuid.toString().substring(0, 16);
+                String imagePath = imageUtil.uploadImage(file, "blog-preview-image", shortUUID16, false);
+                blogMapper.updateBlog(blogId, title, digest, imagePath, content);
+            }
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return Result.ok();
+    }
+
     // 撤销博客
     @Transactional
     public Result revokeBlog(int blogId) {
