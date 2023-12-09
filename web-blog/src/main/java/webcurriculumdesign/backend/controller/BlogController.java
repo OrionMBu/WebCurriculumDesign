@@ -102,6 +102,7 @@ public class BlogController {
      * @param author 作者
      * @param order 排序类型（0 -> 发布时间排序，1 -> 点赞量排序，2 -> 浏览量排序，3 -> 评论量排序）
      * @param isAsc 是否正序
+     * @param includeSelf 是否需要包括自己的
      * @param page 页数
      * @param pageSize 每页数量
      */

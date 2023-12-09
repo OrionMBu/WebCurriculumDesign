@@ -89,6 +89,16 @@ public interface BlogMapper extends BaseMapper<Blog> {
     IPage<Blog> selectBlogList(@Param(Constants.WRAPPER) Wrapper<Blog> wrapper, IPage<Blog> page);
 
     /**
+     * 查询博客总数
+     *
+     * @param wrapper 查询条件
+     */
+    @Select("SELECT COUNT(*) FROM blog " +
+            "LEFT JOIN info_student ON blog.user_id = info_student.user_id " +
+            "WHERE ${ew.sqlSegment}")
+    Long selectCount(@Param(Constants.WRAPPER) Wrapper<Blog> wrapper);
+
+    /**
      * 获取指定博客的评论
      *
      * @param blogId 博客id

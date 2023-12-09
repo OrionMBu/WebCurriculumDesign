@@ -184,8 +184,8 @@ public class BlogService {
         QueryWrapper<Blog> blogQueryWrapper = new QueryWrapper<>();
         blogQueryWrapper
                 .like("title", "%" + title + "%")
-                .like("title", "%" + digest + "%")
-                .like("title", "%" + content + "%")
+                .like("digest", "%" + digest + "%")
+                .like("content", "%" + content + "%")
                 .like("name", "%" + author + "%");
 
         // 排序逻辑
@@ -208,8 +208,9 @@ public class BlogService {
 
         // 获取博客信息
         List<Blog> blogList = blogIPage.getRecords();
-        long total = blogIPage.getTotal();
 
+        // 获取总数
+        long total = blogMapper.selectCount(blogQueryWrapper);
 
         // 判断是否为自己发布的博客
         try {
