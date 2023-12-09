@@ -143,6 +143,17 @@ public class BlogController {
     }
 
     /**
+     * 获取评论
+     *
+     * @param blogId 博客id
+     */
+    @RequiredLogin(roles = "STUDENT")
+    @GetMapping("/getComment")
+    public Result getComment(@RequestParam int blogId) {
+        return blogService.getComment(blogId);
+    }
+
+    /**
      * 添加评论
      *
      * @param blogId 博客id

@@ -251,6 +251,12 @@ public class BlogService {
         return Result.ok();
     }
 
+    // 获取评论
+    public Result getComment(int blogId) {
+        // 获取博客评论
+        return Result.success(blogMapper.getComments(blogId));
+    }
+
     // 更新博客评论
     public Result comment(int blogId, String comment) {
         // 获取博客信息

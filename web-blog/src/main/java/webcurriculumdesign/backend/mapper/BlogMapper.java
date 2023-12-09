@@ -74,7 +74,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      *
      * @param userId 用户id
      */
-    @Select("SELECT *, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId} ORDER BY publish_time")
+    @Select("SELECT blog.id, blog.user_id, title, digest, image, browse, `like`, comment, publish_time, name AS author FROM blog JOIN info_student ON blog.user_id = info_student.user_id WHERE blog.user_id = #{userId} ORDER BY publish_time")
     List<Blog> getBlogByUserId(Integer userId);
 
     /**
