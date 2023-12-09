@@ -58,7 +58,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      *
      * @param userId 用户id
      */
-    @Select("SELECT signature, speciality, profile FROM info_student JOIN info_user ON info_student.user_id = info_user.id WHERE user_id = #{userId}")
+    @Select("SELECT signature, specialty, profile FROM info_student JOIN info_user ON info_student.user_id = info_user.id WHERE user_id = #{userId}")
     Map<String, Object> getPersonalInfo(Integer userId);
 
     /**

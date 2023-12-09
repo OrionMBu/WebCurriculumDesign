@@ -44,5 +44,5 @@ public class Student extends BaseInfo{
     /*
     特长
      */
-    private String speciality;
+    private String specialty;
 }

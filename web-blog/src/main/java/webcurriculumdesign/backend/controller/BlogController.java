@@ -113,9 +113,10 @@ public class BlogController {
                              @RequestParam(required = false, defaultValue = "") String author,
                              @RequestParam(required = false, defaultValue = "0") int order,
                              @RequestParam(required = false, defaultValue = "true") boolean isAsc,
+                             @RequestParam(required = false, defaultValue = "true") boolean includeSelf,
                              @RequestParam(required = false, defaultValue = "1") int page,
                              @RequestParam(required = false, defaultValue = "20") int pageSize) {
-        return blogService.searchBlog(title, digest, content, author, order, isAsc, page, pageSize);
+        return blogService.searchBlog(title, digest, content, author, order, isAsc, includeSelf, page, pageSize);
     }
 
     /**

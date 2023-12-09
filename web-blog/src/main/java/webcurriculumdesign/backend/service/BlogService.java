@@ -179,7 +179,7 @@ public class BlogService {
     }
 
     // 查询博客
-    public Result searchBlog(String title, String digest, String content, String author, int order, boolean isAsc, int page, int pageSize) {
+    public Result searchBlog(String title, String digest, String content, String author, int order, boolean isAsc, boolean includeSelf, int page, int pageSize) {
         // 模糊查询
         QueryWrapper<Blog> blogQueryWrapper = new QueryWrapper<>();
         blogQueryWrapper
@@ -196,24 +196,34 @@ public class BlogService {
             default -> blogQueryWrapper.orderBy(true, isAsc, "publish_time");
         }
 
+        if (!includeSelf) blogQueryWrapper.ne("blog.user_id", CurrentUser.id);
+
         // 分页查询
         IPage<Blog> iPage = new Page<>(page, pageSize);
         IPage<Blog> blogIPage = blogMapper.selectBlogList(blogQueryWrapper, iPage);
 
-        List<Map<String, Object>> result = new ArrayList<>();
+        // 存储结果
+        List<Map<String, Object>> blogResult = new ArrayList<>();
+        Map<String, Object> result = new HashMap<>();
+
+        // 获取博客信息
         List<Blog> blogList = blogIPage.getRecords();
+        long total = blogIPage.getTotal();
+
 
         // 判断是否为自己发布的博客
         try {
             for (Blog blog : blogList) {
                 Map<String, Object> blogMap = MapUtil.convertObjectToMap(blog);
                 blogMap.put("selfPublish", blog.getUserId().equals(CurrentUser.id));
-                result.add(blogMap);
+                blogResult.add(blogMap);
             }
         } catch (Exception e) {
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
         }
 
+        result.put("blog", blogResult);
+        result.put("total", total);
 
         return Result.success(result);
     }
