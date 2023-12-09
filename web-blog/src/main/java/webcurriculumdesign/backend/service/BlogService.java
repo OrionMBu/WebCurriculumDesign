@@ -1,10 +1,9 @@
 package webcurriculumdesign.backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -199,15 +198,12 @@ public class BlogService {
         if (!includeSelf) blogQueryWrapper.ne("blog.user_id", CurrentUser.id);
 
         // 分页查询
-        IPage<Blog> iPage = new Page<>(page, pageSize);
-        IPage<Blog> blogIPage = blogMapper.selectBlogList(blogQueryWrapper, iPage);
+        int offset = (page - 1) * pageSize;
+        List<Blog> blogList = blogMapper.selectBlogList(blogQueryWrapper, new RowBounds(offset, pageSize));
 
         // 存储结果
         List<Map<String, Object>> blogResult = new ArrayList<>();
         Map<String, Object> result = new HashMap<>();
-
-        // 获取博客信息
-        List<Blog> blogList = blogIPage.getRecords();
 
         // 获取总数
         long total = blogMapper.selectCount(blogQueryWrapper);
@@ -224,7 +220,7 @@ public class BlogService {
         }
 
         result.put("blog", blogResult);
-        result.put("total", total);
+        result.put("total", (int) Math.ceil(total / (double) pageSize));
 
         return Result.success(result);
     }
