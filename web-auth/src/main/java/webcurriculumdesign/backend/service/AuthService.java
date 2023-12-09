@@ -147,6 +147,7 @@ public class AuthService {
             map.put("role", user.getRole());
             map.put("profile", user.getProfile());
             map.put("mail", user.getMail());
+            map.put("id", user.getId());
             map.put("name", userService.getUserData(user.getId()).get("name"));
 
             // 获取当前时间戳并更新登录时间
