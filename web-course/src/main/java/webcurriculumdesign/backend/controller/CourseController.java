@@ -23,6 +23,18 @@ public class CourseController {
     }
 
     /**
+     * 更新课程备注
+     *
+     * @param id 课程id
+     * @param comment 备注
+     */
+    @RequiredLogin(roles = "TEACHER")
+    @PatchMapping("/updateComment")
+    public Result updateComment(@RequestParam int id, @RequestParam String comment) {
+        return courseService.updateComment(id, comment);
+    }
+
+    /**
      * 查询课程
      *
      * @param page 页码

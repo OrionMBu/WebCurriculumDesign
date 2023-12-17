@@ -6,6 +6,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.data.constant.Role;
+import webcurriculumdesign.backend.data.dao.CourseTeacherDao;
 import webcurriculumdesign.backend.data.po.Course;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.CourseMapper;
@@ -20,6 +21,8 @@ public class CourseService {
     UserService userService;
     @Resource
     CourseMapper courseMapper;
+    @Resource
+    CourseTeacherDao courseTeacherDao;
     @Resource
     CourseUtil courseUtil;
 
@@ -40,6 +43,18 @@ public class CourseService {
             }
         }
         return Result.success(courseList);
+    }
+
+    // 更新课程备注
+    public Result updateComment(int id, String comment) {
+        if (!CurrentUser.role.equals(Role.ADMIN.role)) {
+            // 查询课程-教师记录
+            int record = courseTeacherDao.getCourseTeacherRecord(CurrentUser.id, id);
+            if (record == 0) return Result.error(Response.SC_FORBIDDEN, "只能修改自己授课的备注");
+        }
+
+        courseMapper.updateComment(id, comment);
+        return Result.ok();
     }
 
     // 查询课程

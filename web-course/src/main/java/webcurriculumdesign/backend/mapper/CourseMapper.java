@@ -30,6 +30,15 @@ public interface CourseMapper extends BaseMapper<Course> {
     List<Course> searchCourseWithTeacherName(@Param("courseName")String courseName, @Param("index")String index, @Param("teacherName")String teacherName, @Param("type")String type, RowBounds rowBounds);
 
     /**
+     * 更新课程备注
+     *
+     * @param courseId 课程id
+     * @param comment 备注
+     */
+    @Update("UPDATE course SET comment = #{comment} WHERE id = #{courseId}")
+    void updateComment(@Param("courseId") Integer courseId, @Param("comment") String comment);
+
+    /**
      * 查询课程
      *
      * @param courseName 课程名称
