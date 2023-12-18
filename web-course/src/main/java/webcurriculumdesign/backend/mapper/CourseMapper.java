@@ -161,7 +161,7 @@ public interface CourseMapper extends BaseMapper<Course> {
      *
      * @param courseId 课程id
      */
-    @Select("SELECT `index`, course.name AS courseName, credit, regular, final_score AS finalScore, total, ifs.name AS studentName, number, class_number AS classNumber, major, " +
+    @Select("SELECT `index`, course.name AS courseName, credit, regular, final_score AS finalScore, total, ifs.name AS studentName, number, class_number AS classNumber, major, cs1.user_id AS userId , " +
             "(SELECT COUNT(total) FROM course_student cs2 " +
             "WHERE cs2.total > cs1.total AND cs2.course_id = cs1.course_id) + 1 AS ranking, " +
             "IF(total >= 60, ROUND(total / 10 - 5, 1), 0) AS point " +
