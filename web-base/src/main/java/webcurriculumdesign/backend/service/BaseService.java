@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import webcurriculumdesign.backend.data.dao.AcademyDao;
 import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
@@ -37,6 +38,8 @@ public class BaseService {
     NewsMapper newsMapper;
     @Resource
     StaticValueDao staticValueDao;
+    @Resource
+    AcademyDao academyDao;
     @Resource
     UserService userService;
     @Resource
@@ -120,6 +123,11 @@ public class BaseService {
         }
 
         return Result.ok();
+    }
+
+    // 获取学院列表
+    public Result getAcademyList() {
+        return Result.success(academyDao.getAcademyList());
     }
 
     // 获取最新新闻

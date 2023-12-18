@@ -63,6 +63,11 @@ public class BaseController {
         return baseService.addMenu(name, parent_id, role, route);
     }
 
+    @GetMapping("/getAcademyList")
+    public Result getAcademyList() {
+        return baseService.getAcademyList();
+    }
+
     /**
      * 获取最新新闻
      *
