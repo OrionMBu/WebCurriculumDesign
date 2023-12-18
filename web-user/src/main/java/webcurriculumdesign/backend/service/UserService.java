@@ -8,13 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.dto.FileToUpload;
 import webcurriculumdesign.backend.data.constant.Role;
-import webcurriculumdesign.backend.data.po.Audit;
 import webcurriculumdesign.backend.data.po.BaseInfo;
 import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.AcademyMapper;
-import webcurriculumdesign.backend.mapper.AuditMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.MapUtil;
 
@@ -35,8 +33,6 @@ public class UserService<T extends BaseInfo> {
     TeacherService teacherService;
     @Resource
     AcademyMapper academyMapper;
-    @Resource
-    AuditMapper auditMapper;
 
     // 修改头像
     public Result changeProfile(MultipartFile file) {
@@ -126,35 +122,6 @@ public class UserService<T extends BaseInfo> {
             }
             default -> new BaseInfo();
         };
-    }
-
-    // 获取用户申请结果
-    public Result getAuditResult() {
-        // 查询结果
-        List<Audit> auditList = auditMapper.getAuditByApplicantId(CurrentUser.id);
-        List<Map<String, Object>> resultList = new ArrayList<>();
-
-        // 处理
-        for (Audit audit : auditList) {
-            Map<String, Object> auditMap = new HashMap<>();
-            auditMap.put("id", audit.getId());
-            auditMap.put("name", audit.getName());
-            switch (audit.getStatus()) {
-                case 0 -> auditMap.put("status", 0);
-                case 1 -> auditMap.put("status", 33);
-                case 2 -> auditMap.put("status", 67);
-                case 3 -> auditMap.put("status", 100);
-            }
-
-            if (audit.getReviewer() != null) {
-                User user = userMapper.selectById(audit.getReviewer());
-                auditMap.put("reviewer", user.getMail());
-            }
-
-            resultList.add(auditMap);
-        }
-
-        return Result.success(resultList);
     }
 
     // 更新个人信息

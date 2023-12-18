@@ -1,18 +1,20 @@
 package webcurriculumdesign.backend.data.po;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 审批事件
+ * 审批事件记录
  */
 @Data
 @AllArgsConstructor
-@TableName("basic_audit")
-public class Audit {
+@TableName("audit_record")
+public class AuditRecord {
     /*
     主键id
      */
@@ -22,17 +24,25 @@ public class Audit {
     /*
     事件名称
      */
+    @TableField(exist = false)
     private String name;
+
+    /*
+    事件内容
+     */
+    private JSON content;
 
     /*
     申请者
      */
-    private Integer applicant;
+    @TableField(exist = false)
+    private String applicant;
 
     /*
     审批者
      */
-    private Integer reviewer;
+    @TableField(exist = false)
+    private String reviewer;
 
     /*
     审批状态（1为通过自动审核，2为通过教师审核，3为通过管理员审核）

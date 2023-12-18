@@ -53,16 +53,6 @@ public class UserController {
     }
 
     /**
-     * 获取用户申请结果
-     *
-     */
-    @RequiredLogin(roles = "ALL")
-    @GetMapping("/getAuditResult")
-    public Result getAuditResult() {
-        return userService.getAuditResult();
-    }
-
-    /**
      * 更新指定用户信息
      *
      * @param data 用户信息
