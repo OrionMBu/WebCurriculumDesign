@@ -73,6 +73,17 @@ public class BaseController {
     }
 
     /**
+     * 添加新学院
+     *
+     * @param academy 学院
+     */
+    @RequiredLogin
+    @PostMapping("/addAcademy")
+    public Result addAcademy(@RequestParam String academy) {
+        return baseService.addAcademy(academy);
+    }
+
+    /**
      * 获取最新新闻
      *
      * @param number 新闻数量

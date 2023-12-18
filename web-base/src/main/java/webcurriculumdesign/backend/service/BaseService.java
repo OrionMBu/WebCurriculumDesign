@@ -130,6 +130,16 @@ public class BaseService {
         return Result.success(academyDao.getAcademyList());
     }
 
+    // 插入新学院
+    public Result addAcademy(String academy) {
+        try {
+            academyDao.insertAcademy(academy);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
     // 获取最新新闻
     public Result getLatestNews(int number) {
         List<News> latestNewsList = newsMapper.getLatestNews(number);
