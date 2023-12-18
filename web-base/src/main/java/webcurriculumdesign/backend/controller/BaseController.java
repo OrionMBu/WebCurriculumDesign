@@ -84,6 +84,17 @@ public class BaseController {
     }
 
     /**
+     * 删除学院
+     *
+     * @param academyId 学院id
+     */
+    @RequiredLogin
+    @DeleteMapping("/deleteAcademy")
+    public Result deleteAcademy(@RequestParam int academyId) {
+        return baseService.deleteAcademy(academyId);
+    }
+
+    /**
      * 获取最新新闻
      *
      * @param number 新闻数量

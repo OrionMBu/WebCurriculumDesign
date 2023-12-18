@@ -136,8 +136,19 @@ public class BaseService {
             academyDao.insertAcademy(academy);
             return Result.ok();
         } catch (Exception e) {
+            return Result.error(Response.SC_BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    // 删除学院
+    public Result deleteAcademy(int academyId) {
+        try {
+            academyDao.deleteById(academyId);
+            return Result.ok();
+        } catch (Exception e) {
             return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
+
     }
 
     // 获取最新新闻

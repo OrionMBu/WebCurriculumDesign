@@ -1,9 +1,6 @@
 package webcurriculumdesign.backend.data.dao;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -24,4 +21,12 @@ public interface AcademyDao {
      */
     @Insert("INSERT INTO info_academy VALUES (NULL, #{academy})")
     void insertAcademy(@Param("academy") String academy);
+
+    /**
+     * 删除学院
+     *
+     * @param academyId 学院id
+     */
+    @Delete("DELETE FROM info_academy WHERE id = #{academyId}")
+    void deleteById(@Param("academyId") Integer academyId);
 }
