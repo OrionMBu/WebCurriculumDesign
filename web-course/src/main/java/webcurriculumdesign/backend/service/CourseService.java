@@ -131,6 +131,11 @@ public class CourseService {
         return Result.success(resultMap);
     }
 
+    // 获取所有选课学生的成绩
+    public Result getAllScore(int courseId) {
+        return Result.success(courseMapper.getAllScoreListByCourseId(courseId));
+    }
+
     // 更新学生课程成绩
     public Result updateScore(Integer userId, Integer courseId, Double regular, Double finalScore) {
         // 输入判断，成绩必须>=0，<=100，且不能都为-1

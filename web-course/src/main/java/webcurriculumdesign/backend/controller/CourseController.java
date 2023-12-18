@@ -91,6 +91,17 @@ public class CourseController {
     }
 
     /**
+     * 获取所有选课学生的成绩
+     *
+     * @param id 课程id
+     */
+    @RequiredLogin(roles = "TEACHER")
+    @GetMapping("/getAllScore")
+    public Result getAllScore(@RequestParam int id) {
+        return courseService.getAllScore(id);
+    }
+
+    /**
      * 更新学生课程成绩，同时异步更新GPA
      *
      * @param userId 用户id

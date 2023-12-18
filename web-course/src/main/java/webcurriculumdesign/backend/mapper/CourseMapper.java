@@ -157,6 +157,21 @@ public interface CourseMapper extends BaseMapper<Course> {
     List<ScoreDto> getScoreListByUserId(@Param("userId") Integer userId);
 
     /**
+     * 通过课程id获取所有选课学生的成绩
+     *
+     * @param courseId 课程id
+     */
+    @Select("SELECT `index`, course.name AS courseName, credit, regular, final_score, total, course_id AS id, ifs.name AS studentName, number, class_number AS classNumber, major, " +
+            "(SELECT COUNT(total) FROM course_student cs2 " +
+            "WHERE cs2.total > cs1.total AND cs2.course_id = cs1.course_id) + 1 AS ranking, " +
+            "IF(total >= 60, ROUND(total / 10 - 5, 1), 0) AS point " +
+            "FROM course_student cs1 " +
+            "LEFT JOIN course ON cs1.course_id = course.id " +
+            "JOIN info_student ifs ON cs1.user_id = ifs.user_id " +
+            "WHERE course_id = #{courseId}")
+    List<Map<String, Object>> getAllScoreListByCourseId(@Param("courseId") Integer courseId);
+
+    /**
      * 更新学生GPA
      *
      * @param userId 用户id
