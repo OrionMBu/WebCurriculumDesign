@@ -125,6 +125,16 @@ public class BaseService {
         return Result.ok();
     }
 
+    // 删除主目录
+    public Result deleteMenu(int menuId) {
+        try {
+            mainMenuMapper.deleteById(menuId);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
     // 获取学院列表
     public Result getAcademyList() {
         return Result.success(academyDao.getAcademyList());

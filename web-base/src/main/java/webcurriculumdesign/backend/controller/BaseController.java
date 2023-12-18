@@ -64,6 +64,17 @@ public class BaseController {
     }
 
     /**
+     * 删除主目录
+     *
+     * @param menuId 目录id
+     */
+    @RequiredLogin
+    @DeleteMapping("/deleteMenu")
+    public Result deleteMenu(@RequestParam int menuId) {
+        return baseService.deleteMenu(menuId);
+    }
+
+    /**
      * 获取学院列表
      *
      */
