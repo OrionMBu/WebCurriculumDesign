@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import webcurriculumdesign.backend.data.constant.Constant;
 import webcurriculumdesign.backend.data.dao.MessageDao;
-import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.constant.TokenType;
 import webcurriculumdesign.backend.data.po.User;
@@ -34,14 +34,14 @@ import java.util.Objects;
 
 @Service
 public class AuthService {
+    @Value("${mail_verification_code_length}")
+    String mailVerificationCodeLength;
     @Resource
     RedisUtil redisUtil;
     @Resource
     private SpringTemplateEngine templateEngine;
     @Resource
     MailService mailService;
-    @Resource
-    StaticValueDao staticValue;
     @Resource
     MessageDao messageDao;
     @Resource
@@ -91,7 +91,7 @@ public class AuthService {
         if (user != null && !flag.equals("false")) return Result.error(Response.SC_BAD_REQUEST, "邮箱已被注册");
 
         // 生成邮件验证码
-        String mailVerificationCode = CommonUtil.generateRandomString(Integer.parseInt(staticValue.getValue("mail_verification_code_length")));
+        String mailVerificationCode = CommonUtil.generateRandomString(Integer.parseInt(mailVerificationCodeLength));
 
         // 获取邮件提示信息并处理成map
         Map<String, String> messageDaoMap = new HashMap<>();

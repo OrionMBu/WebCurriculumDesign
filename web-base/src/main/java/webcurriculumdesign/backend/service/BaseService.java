@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import jakarta.annotation.Resource;
 import org.apache.catalina.connector.Response;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import webcurriculumdesign.backend.data.dao.AcademyDao;
-import webcurriculumdesign.backend.data.dao.StaticValueDao;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.MainMenu;
 import webcurriculumdesign.backend.data.po.News;
@@ -30,14 +30,14 @@ import java.util.List;
 
 @Service
 public class BaseService {
+    @Value("${file_path}")
+    String filePath;
     @Resource
     MainMenuMapper mainMenuMapper;
     @Resource
     UserMapper userMapper;
     @Resource
     NewsMapper newsMapper;
-    @Resource
-    StaticValueDao staticValueDao;
     @Resource
     AcademyDao academyDao;
     @Resource
@@ -175,7 +175,7 @@ public class BaseService {
         }
 
         // 获取文件地址
-        StringBuilder builder = new StringBuilder(staticValueDao.getValue("file_path"));
+        StringBuilder builder = new StringBuilder(filePath);
         int preLength = builder.length();
 
         // 以用户邮箱或固定基础地址（BaseFile）创建文件地址
