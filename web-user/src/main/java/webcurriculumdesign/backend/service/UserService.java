@@ -263,9 +263,9 @@ public class UserService<T extends BaseInfo> {
         // 判断是否更新
         UpdateWrapper<Evaluate> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", evaluateId);
-        if (moral >= 0 && moral <= 100) updateWrapper.set("moral" ,moral);
-        if (attitude >= 0 && moral <= 100) updateWrapper.set("attitude", attitude);
-        if (practice >= 0 && practice <= 100) updateWrapper.set("practice", practice);
+        if (moral >= 0 && moral <= 10) updateWrapper.set("moral" ,moral);
+        if (attitude >= 0 && moral <= 10) updateWrapper.set("attitude", attitude);
+        if (practice >= 0 && practice <= 10) updateWrapper.set("practice", practice);
 
         try {
             // 更新评价
