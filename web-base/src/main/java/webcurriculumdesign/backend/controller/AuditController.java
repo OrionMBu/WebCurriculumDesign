@@ -14,6 +14,15 @@ public class AuditController {
     AuditService auditService;
 
     /**
+     * 获取审批事件列表
+     *
+     */
+    @GetMapping("/getAudit")
+    public Result getAudit() {
+        return auditService.getAudit();
+    }
+
+    /**
      * 获取用户申请结果
      *
      */

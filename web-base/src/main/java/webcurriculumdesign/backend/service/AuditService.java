@@ -23,6 +23,10 @@ public class AuditService {
     @Resource
     CourseDao courseDao;
 
+    public Result getAudit() {
+        return Result.success(auditMapper.getAudit());
+    }
+
     // 获取用户申请结果
     public Result getAuditResult() {
         // 查询结果

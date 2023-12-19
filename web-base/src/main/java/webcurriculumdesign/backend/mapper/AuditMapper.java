@@ -9,6 +9,14 @@ import java.util.Map;
 
 @Mapper
 public interface AuditMapper extends BaseMapper<AuditRecord> {
+
+    /**
+     * 获取审批事件
+     *
+     */
+    @Select("SELECT * FROM audit")
+    List<Map<String, Object>> getAudit();
+
     /**
      * 查询申请人申请状态
      *
