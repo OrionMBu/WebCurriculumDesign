@@ -27,9 +27,10 @@ public class StudentService {
 
     // 插入学生信息（初始化）
     @Transactional
-    public void insertStudentInfo(Integer userId) {
+    public void insertStudentInfo(Integer userId, String name) {
         Student student = new Student();
         student.setUserId(userId);
+        student.setName(name);
         studentMapper.insert(student);
     }
 

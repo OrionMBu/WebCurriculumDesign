@@ -14,7 +14,7 @@ public interface UserService {
     // 插入用户信息
     @Transactional
     @PostMapping("/insertInfo")
-    void insertInfo(@RequestParam("userId") Integer userId, @RequestParam("role") Integer role);
+    void insertInfo(@RequestParam("userId") Integer userId, @RequestParam("role") Integer role, @RequestParam("name") String name);
 
     // 通过用户id获取用户信息
     @GetMapping("/getUserData/{userId}")

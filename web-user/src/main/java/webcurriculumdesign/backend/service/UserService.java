@@ -189,11 +189,11 @@ public class UserService<T extends BaseInfo> {
     }
 
     // 插入信息（初始化）
-    public void insertInfo(Integer userId, Integer role) {
+    public void insertInfo(Integer userId, Integer role, String name) {
         switch (role) {
-            case 0 -> adminService.insertAdminInfo(userId);
-            case 1 -> teacherService.insertTeacherInfo(userId);
-            default -> studentService.insertStudentInfo(userId);
+            case 0 -> adminService.insertAdminInfo(userId, name);
+            case 1 -> teacherService.insertTeacherInfo(userId, name);
+            default -> studentService.insertStudentInfo(userId, name);
         }
     }
 

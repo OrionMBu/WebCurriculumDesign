@@ -38,9 +38,10 @@ public class AdminService {
 
     // 插入学生信息（初始化）
     @Transactional
-    public void insertAdminInfo(Integer userId) {
+    public void insertAdminInfo(Integer userId, String name) {
         Admin admin = new Admin();
         admin.setUserId(userId);
+        admin.setName(name);
         adminMapper.insert(admin);
     }
 

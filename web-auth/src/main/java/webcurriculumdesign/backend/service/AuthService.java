@@ -75,7 +75,7 @@ public class AuthService {
         // 插入用户
         userMapper.insert(user);
         Integer userId = user.getId();
-        userService.insertInfo(userId, Integer.valueOf(signUpRole));
+        userService.insertInfo(userId, Integer.valueOf(signUpRole), userMail);
 
         return Result.ok();
     }

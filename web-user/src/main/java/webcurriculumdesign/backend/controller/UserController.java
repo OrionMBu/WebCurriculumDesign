@@ -122,8 +122,8 @@ public class UserController {
      */
     @Transactional
     @PostMapping("/insertInfo")
-    public void insertInfo(@RequestParam Integer userId, @RequestParam Integer role) {
-        userService.insertInfo(userId, role);
+    public void insertInfo(@RequestParam Integer userId, @RequestParam Integer role, @RequestParam String name) {
+        userService.insertInfo(userId, role, name);
     }
 
     /**
