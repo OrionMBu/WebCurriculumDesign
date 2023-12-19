@@ -18,6 +18,31 @@ public interface AuditMapper extends BaseMapper<AuditRecord> {
     List<Map<String, Object>> getAudit();
 
     /**
+     * 添加审批事件
+     *
+     * @param auditName 审批名称
+     * @param prompt 行为提示符
+     */
+    @Insert("INSERT INTO audit(name, prompt) VALUES (#{auditName}, #{prompt})")
+    void addAudit(@Param("auditName") String auditName, @Param("prompt") int prompt);
+
+    /**
+     * 通过审批id删除审批事件
+     *
+     * @param auditId 审批id
+     */
+    @Delete("DELETE FROM audit WHERE id = #{auditId}")
+    void deleteAuditById(@Param("auditId") Integer auditId);
+
+    /**
+     * 通过审批id删除记录
+     *
+     * @param auditId 审批id
+     */
+    @Delete("DELETE FROM audit_record WHERE audit_id = #{auditId}")
+    void deleteRecordByAuditId(@Param("auditId") Integer auditId);
+
+    /**
      * 查询申请人申请状态
      *
      * @param applicantId 申请人id

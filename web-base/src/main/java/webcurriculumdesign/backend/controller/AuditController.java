@@ -23,6 +23,29 @@ public class AuditController {
     }
 
     /**
+     * 添加审批事件
+     *
+     * @param auditName 事件名称
+     * @param prompt 行为提示符（0 -> 不进行任何操作，1 -> 发布课程）
+     */
+    @RequiredLogin
+    @PostMapping("/addAudit")
+    public Result addAudit(@RequestParam String auditName, @RequestParam(required = false, defaultValue = "0") int prompt) {
+        return auditService.addAudit(auditName, prompt);
+    }
+
+    /**
+     * 删除审批事件
+     *
+     * @param auditId 审批id
+     */
+    @RequiredLogin
+    @DeleteMapping("/deleteAudit")
+    public Result deleteAudit(@RequestParam int auditId) {
+        return auditService.deleteAudit(auditId);
+    }
+
+    /**
      * 获取用户申请结果
      *
      */

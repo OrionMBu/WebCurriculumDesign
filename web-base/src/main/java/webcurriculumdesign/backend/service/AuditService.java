@@ -23,8 +23,27 @@ public class AuditService {
     @Resource
     CourseDao courseDao;
 
+    // 获取审批事件
     public Result getAudit() {
         return Result.success(auditMapper.getAudit());
+    }
+
+    // 添加审批
+    public Result addAudit(String auditName, int prompt) {
+        try {
+            auditMapper.addAudit(auditName, prompt);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    // 删除审批事件
+    @Transactional
+    public Result deleteAudit(int auditId) {
+        auditMapper.deleteRecordByAuditId(auditId);
+        auditMapper.deleteAuditById(auditId);
+        return Result.ok();
     }
 
     // 获取用户申请结果
