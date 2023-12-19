@@ -72,4 +72,14 @@ public class Course {
     备注
      */
     private String comment;
+
+    /*
+    平时成绩权重
+     */
+    private double regularWeight;
+
+    /*
+    期末权重
+     */
+    private double finalWeight;
 }
