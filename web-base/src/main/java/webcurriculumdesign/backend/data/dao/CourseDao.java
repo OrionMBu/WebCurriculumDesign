@@ -21,11 +21,11 @@ public interface CourseDao {
      * @param academy 学院
      * @param finalWeight 期末权重
      */
-    @Insert("INSERT INTO course(name, location, type, credit, academy_id, regular_weight, final_weight) " +
+    @Insert("INSERT INTO course(name, location, type, credit, academy_id,comment, regular_weight, final_weight) " +
             "VALUES (#{name}, #{location}, #{type}, #{credit}, " +
-            "(SELECT info_academy.id FROM info_academy WHERE info_academy.name = #{academy}), 1 - #{finalWeight}, #{finalWeight})")
+            "(SELECT info_academy.id FROM info_academy WHERE info_academy.name = #{academy}), #{comment}, 1 - #{finalWeight}, #{finalWeight})")
     void insertCourse(@Param("name") String name, @Param("location") String location, @Param("type") int type,
-                      @Param("credit") String credit, @Param("academy") String academy, @Param("finalWeight") double finalWeight);
+                      @Param("credit") String credit, @Param("academy") String academy,@Param("comment") String comment, @Param("finalWeight") double finalWeight);
 
     /**
      * 插入课程时间

@@ -92,7 +92,7 @@ public class AuditService {
     @Transactional
     public void addCourse(CourseAudit course) throws RuntimeException{
         // 插入课程信息
-        courseDao.insertCourse(course.getName(), course.getLocation(), course.getType(), course.getCredit(), course.getAcademy(), course.getFinalWeight());
+        courseDao.insertCourse(course.getName(), course.getLocation(), course.getType(), course.getCredit(), course.getAcademy(),course.getComment(), course.getFinalWeight());
 
         // 获取最大id，更新课序号
         int id = courseDao.getMaxCourseId();
