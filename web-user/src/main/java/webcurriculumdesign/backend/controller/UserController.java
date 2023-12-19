@@ -63,6 +63,43 @@ public class UserController {
         return userService.updateAppointedUser(data);
     }
 
+    /**
+     * 获取评价信息
+     *
+     */
+    @RequiredLogin(roles = "ALL")
+    @GetMapping("/getToEvaluate")
+    public Result getToEvaluate() {
+        return userService.getToEvaluate();
+    }
+
+    /**
+     * 获取被评价信息
+     *
+     */
+    @RequiredLogin(roles = "ALL")
+    @GetMapping("/getEvaluated")
+    public Result getEvaluated() {
+        return userService.getEvaluated();
+    }
+
+    /**
+     * 评价
+     *
+     * @param evaluateId 评价id
+     * @param moral 思想道德
+     * @param attitude 学习态度
+     * @param practice 实践能力
+     */
+    @RequiredLogin(roles = "ALL")
+    @PostMapping("/evaluate")
+    public Result evaluate(@RequestParam int evaluateId,
+                           @RequestParam(required = false, defaultValue = "-1") int moral,
+                           @RequestParam(required = false, defaultValue = "-1") int attitude,
+                           @RequestParam(required = false, defaultValue = "-1") int practice) {
+        return userService.evaluate(evaluateId, moral, attitude, practice);
+    }
+
 
     //----------------------内部微服务接口----------------------//
 

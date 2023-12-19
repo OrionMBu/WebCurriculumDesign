@@ -9,10 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 import webcurriculumdesign.backend.data.dto.FileToUpload;
 import webcurriculumdesign.backend.data.constant.Role;
 import webcurriculumdesign.backend.data.po.BaseInfo;
+import webcurriculumdesign.backend.data.po.Evaluate;
 import webcurriculumdesign.backend.data.po.User;
 import webcurriculumdesign.backend.data.constant.CurrentUser;
 import webcurriculumdesign.backend.data.vo.Result;
 import webcurriculumdesign.backend.mapper.AcademyMapper;
+import webcurriculumdesign.backend.mapper.EvaluateMapper;
 import webcurriculumdesign.backend.mapper.UserMapper;
 import webcurriculumdesign.backend.util.MapUtil;
 
@@ -24,6 +26,10 @@ public class UserService<T extends BaseInfo> {
     @Resource
     UserMapper userMapper;
     @Resource
+    AcademyMapper academyMapper;
+    @Resource
+    EvaluateMapper evaluateMapper;
+    @Resource
     BaseService baseService;
     @Resource
     AdminService adminService;
@@ -31,8 +37,6 @@ public class UserService<T extends BaseInfo> {
     StudentService studentService;
     @Resource
     TeacherService teacherService;
-    @Resource
-    AcademyMapper academyMapper;
 
     // 修改头像
     public Result changeProfile(MultipartFile file) {
@@ -193,4 +197,35 @@ public class UserService<T extends BaseInfo> {
         }
     }
 
+
+    // 获取评价信息
+    public Result getToEvaluate() {
+        return Result.success(evaluateMapper.getEvaluateByEvaluatorId(CurrentUser.id));
+    }
+
+    // 获取被评价信息
+    public Result getEvaluated() {
+        return Result.success(evaluateMapper.getEvaluateByEvaluatedId(CurrentUser.id));
+    }
+
+    // 评价
+    public Result evaluate(int evaluateId, int moral, int attitude, int practice) {
+        // 判断
+        if (evaluateMapper.isToEvaluate(evaluateId, CurrentUser.id) != 1 && !CurrentUser.role.equals(Role.ADMIN.role)) return Result.error(Response.SC_FORBIDDEN, "不能做这个评价");
+
+        // 判断是否更新
+        UpdateWrapper<Evaluate> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", evaluateId);
+        if (moral >= 0 && moral <= 100) updateWrapper.set("moral" ,moral);
+        if (attitude >= 0 && moral <= 100) updateWrapper.set("attitude", attitude);
+        if (practice >= 0 && practice <= 100) updateWrapper.set("practice", practice);
+
+        try {
+            // 更新评价
+            evaluateMapper.update(null, updateWrapper);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+        }
+    }
 }
