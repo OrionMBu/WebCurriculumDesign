@@ -205,8 +205,51 @@ public class UserService<T extends BaseInfo> {
 
     // 获取被评价信息
     public Result getEvaluated() {
-        return Result.success(evaluateMapper.getEvaluateByEvaluatedId(CurrentUser.id));
+        List<Evaluate> evaluateList = evaluateMapper.getEvaluateByEvaluatedId(CurrentUser.id);
+
+        // 初始化总分和计数
+        int moralTotal = 0, attitudeTotal = 0, practiceTotal = 0;
+        int moralCount = 0, attitudeCount = 0, practiceCount = 0;
+
+        // 计算总分和计数
+        for (Evaluate evaluate : evaluateList) {
+            if (evaluate.getMoral() != -1) {
+                moralTotal += evaluate.getMoral();
+                moralCount++;
+            }
+            if (evaluate.getAttitude() != -1) {
+                attitudeTotal += evaluate.getAttitude();
+                attitudeCount++;
+            }
+            if (evaluate.getPractice() != -1) {
+                practiceTotal += evaluate.getPractice();
+                practiceCount++;
+            }
+        }
+
+        // 避免除以零错误，并处理空结果情况
+        Map<String, Integer> result = new HashMap<>();
+        if (moralCount > 0) {
+            result.put("moral", moralTotal / moralCount);
+        } else {
+            result.put("moral", 0); // 或者可以返回一个特定的值，表示没有评估记录
+        }
+
+        if (attitudeCount > 0) {
+            result.put("attitude", attitudeTotal / attitudeCount);
+        } else {
+            result.put("attitude", 0);
+        }
+
+        if (practiceCount > 0) {
+            result.put("practice", practiceTotal / practiceCount);
+        } else {
+            result.put("practice", 0);
+        }
+
+        return Result.success(result);
     }
+
 
     // 评价
     public Result evaluate(int evaluateId, int moral, int attitude, int practice) {

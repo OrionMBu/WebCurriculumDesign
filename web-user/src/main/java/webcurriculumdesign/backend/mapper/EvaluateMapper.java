@@ -28,10 +28,8 @@ public interface EvaluateMapper extends BaseMapper<Evaluate> {
      *
      * @param evaluatedId 被评价者id
      */
-    @Select("SELECT *, ((IF(moral != -1, moral, 0) + IF(attitude != -1, attitude, 0) + IF(practice != -1, practice, 0)) / 3) AS total, ifs1.name AS nameOfEvaluator, ifs2.name AS nameOfEvaluated " +
+    @Select("SELECT * " +
             "FROM user_evaluate " +
-            "JOIN info_student ifs1 ON evaluator = ifs1.user_id " +
-            "JOIN info_student ifs2 ON evaluated = ifs2.user_id " +
             "WHERE evaluated = #{evaluatedId}")
     List<Evaluate> getEvaluateByEvaluatedId(@Param("evaluatedId") Integer evaluatedId);
 
