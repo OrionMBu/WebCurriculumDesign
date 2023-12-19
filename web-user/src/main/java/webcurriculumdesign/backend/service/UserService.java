@@ -247,6 +247,10 @@ public class UserService<T extends BaseInfo> {
             result.put("practice", 0);
         }
 
+        // 计算总平均分，使用非零计数
+        int totalCount = moralCount + attitudeCount + practiceCount;
+        result.put("total", totalCount > 0 ? (moralTotal + attitudeTotal + practiceTotal) / totalCount : 0);
+
         return Result.success(result);
     }
 
