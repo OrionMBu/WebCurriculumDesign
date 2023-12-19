@@ -84,7 +84,7 @@ public class AuditService {
             auditMapper.insertAudit(course.getAuditId(), JSONObject.from(course).toString(), CurrentUser.id, 8, 1);
             return Result.ok();
         } catch (Exception e) {
-            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "审批类型不存在");
         }
     }
 
