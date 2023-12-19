@@ -43,18 +43,32 @@ public interface AuditMapper extends BaseMapper<AuditRecord> {
     void deleteRecordByAuditId(@Param("auditId") Integer auditId);
 
     /**
-     * 查询申请人申请状态
+     * 查看审批
      *
-     * @param applicantId 申请人id
+     * @param reviewerId 审批人
      */
-    @Select("SELECT audit_record.id AS recordId, audit.name AS name, appli.mail AS applicant, review.mail AS reviewer, " +
+    @Select("SELECT audit_record.id AS recordId, audit_id AS auditId, audit.name AS name, content, appli.id AS applicantId, appli.mail AS applicant, review.id AS reviewerId, review.mail AS reviewer, " +
             "CASE WHEN status = 0 THEN 0 WHEN status = 1 THEN 33 WHEN status = 2 THEN 67 WHEN status = 3 THEN 100 END AS status " +
             "FROM audit_record " +
             "JOIN audit ON audit_record.audit_id = audit.id " +
             "JOIN info_user appli ON applicant = appli.id " +
             "JOIN info_user review ON reviewer = review.id " +
-            "WHERE applicant=#{applicantId}")
-    List<Map<String, Object>> getAuditByApplicantId(Integer applicantId);
+            "WHERE reviewer = #{reviewerId}")
+    List<Map<String, Object>> getAuditByReviewerId(@Param("reviewerId") Integer reviewerId);
+
+    /**
+     * 查询申请人申请状态
+     *
+     * @param applicantId 申请人id
+     */
+    @Select("SELECT audit_record.id AS recordId, audit_id AS auditId, audit.name AS name, appli.id AS applicantId, appli.mail AS applicant, review.id AS reviewerId, review.mail AS reviewer, " +
+            "CASE WHEN status = 0 THEN 0 WHEN status = 1 THEN 33 WHEN status = 2 THEN 67 WHEN status = 3 THEN 100 END AS status " +
+            "FROM audit_record " +
+            "JOIN audit ON audit_record.audit_id = audit.id " +
+            "JOIN info_user appli ON applicant = appli.id " +
+            "JOIN info_user review ON reviewer = review.id " +
+            "WHERE applicant = #{applicantId}")
+    List<Map<String, Object>> getAuditByApplicantId(@Param("applicantId") Integer applicantId);
 
     /**
      * 通过审批记录id获取审批

@@ -46,6 +46,11 @@ public class AuditService {
         return Result.ok();
     }
 
+    // 查看指定审批列表
+    public Result getAuditInfo() {
+        return Result.success(auditMapper.getAuditByReviewerId(CurrentUser.id));
+    }
+
     // 获取用户申请结果
     public Result getAuditResult() {
         // 查询结果
@@ -69,6 +74,16 @@ public class AuditService {
         // 更新审批状态
         auditMapper.updateStatusById(recordId, status);
         return Result.ok();
+    }
+
+    // 添加申请
+    public Result apply(int auditId, String content, int reviewer) {
+        try {
+            auditMapper.insertAudit(auditId, content, CurrentUser.id, reviewer, 1);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(Response.SC_INTERNAL_SERVER_ERROR, "错误");
+        }
     }
 
     // 开课申请

@@ -46,6 +46,16 @@ public class AuditController {
     }
 
     /**
+     * 获取审批信息
+     *
+     */
+    @RequiredLogin(roles = "ALL")
+    @GetMapping("/getAuditInfo")
+    public Result getAuditInfo() {
+        return auditService.getAuditInfo();
+    }
+
+    /**
      * 获取用户申请结果
      *
      */
@@ -65,6 +75,19 @@ public class AuditController {
     @PostMapping("/updateAuditStatus")
     public Result updateAuditStatus(@RequestParam int recordId, @RequestParam int status) {
         return auditService.updateAuditStatus(recordId, status);
+    }
+
+    /**
+     * 添加审批申请
+     *
+     * @param auditId 审批事件id
+     * @param content 审批内容
+     * @param reviewer 审批人，默认为管理员
+     */
+    @RequiredLogin(roles = "ALL")
+    @PostMapping("/apply")
+    public Result apply(@RequestParam int auditId, @RequestParam String content, @RequestParam(required = false, defaultValue = "8") int reviewer) {
+        return auditService.apply(auditId, content, reviewer);
     }
 
 
