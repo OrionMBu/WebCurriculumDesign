@@ -51,6 +51,11 @@ public class AuditService {
         return Result.success(auditMapper.getAuditByReviewerId(CurrentUser.id));
     }
 
+    // 获取所有审核
+    public Result getAllAudit() {
+        return Result.success(auditMapper.getAllAudit());
+    }
+
     // 获取用户申请结果
     public Result getAuditResult() {
         // 查询结果

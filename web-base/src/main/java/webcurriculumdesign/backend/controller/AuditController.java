@@ -56,6 +56,16 @@ public class AuditController {
     }
 
     /**
+     * 查看所有审批
+     *
+     */
+    @RequiredLogin
+    @GetMapping("/getAllAudit")
+    public Result getAllAudit() {
+        return auditService.getAllAudit();
+    }
+
+    /**
      * 获取用户申请结果
      *
      */
