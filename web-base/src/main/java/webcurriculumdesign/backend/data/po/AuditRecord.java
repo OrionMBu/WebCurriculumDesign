@@ -1,6 +1,5 @@
 package webcurriculumdesign.backend.data.po;
 
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -30,7 +29,7 @@ public class AuditRecord {
     /*
     事件内容
      */
-    private JSON content;
+    private String content;
 
     /*
     申请者
@@ -48,4 +47,10 @@ public class AuditRecord {
     审批状态（1为通过自动审核，2为通过教师审核，3为通过管理员审核）
      */
     private Integer status;
+
+    /*
+    行为提示符
+     */
+    @TableField(exist = false)
+    private Integer prompt;
 }
